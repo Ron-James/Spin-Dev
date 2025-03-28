@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 021f4a8741434a3594d6f98c27175d5f, type: 3}
+  m_Name: MissionDataManager
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  guid: 3075d309-5d45-4a3d-bd57-e81eb1cd0d04
+  _ongoingMissions: []
+  _completedMissions: []
+  lastCompletedObjectiveVR:
+    _event: {fileID: 11400000, guid: 19640e52ff65fb14d8007f84a7257242, type: 2}
+    _isConstant: 1
+    _constantValue: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
+  lastStartedObjectiveVR:
+    _event: {fileID: 11400000, guid: 2eb6bd1205cfc554084aa8f6c5f3f85c, type: 2}
+    _isConstant: 1
+    _constantValue: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
+  lastStartedMissionVR:
+    _event: {fileID: 11400000, guid: 8d6b0fc325c75c44bbfcf044ef1e62da, type: 2}
+    _isConstant: 1
+    _constantValue: {fileID: 11400000, guid: 68f877ce0221ee9499eab9dc22d699e0, type: 2}
+  lastCompletedMissionVR:
+    _event: {fileID: 11400000, guid: c3b0defad97d41c40ae6c906721ec657, type: 2}
+    _isConstant: 1
+    _constantValue: {fileID: 11400000, guid: 68f877ce0221ee9499eab9dc22d699e0, type: 2}
+  allObjectives:
+  - {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}

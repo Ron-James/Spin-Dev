@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edfefd04e31fe7a49ad2a7fbc36f3da5, type: 3}
+  m_Name: InputEventChannel
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: Scenes
+      Entry: 7
+      Data: 0|CustomSceneReference.SceneReference[], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|CustomSceneReference.SceneReference, Assembly-CSharp
+    - Name: scenePath
+      Entry: 1
+      Data: Assets/Scenes/SampleScene.unity
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  _inputEvents:
+  - rid: 6042888796152791171
+  references:
+    version: 2
+    RefIds:
+    - rid: 6042888796152791171
+      type: {class: InputEvent, ns: , asm: Assembly-CSharp}
+      data:
+        _inputAction: {fileID: -1680190386980627800, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+        isInitialized: 0
+        _event: {fileID: 11400000, guid: 8679681264490044db460c833ec254c6, type: 2}
