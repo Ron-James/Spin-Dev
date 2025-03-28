@@ -97,13 +97,13 @@ public class SaveDataManager : SerializedScriptableObject, ISceneCycleListener, 
     public void TriggerSave()
     {
         AsyncCommand saveCommand = new AsyncCommand("SaveData", SaveAsync);
-        CommandManager.ExecuteCommand(saveCommand);
+        CommandRunner.ExecuteCommand(saveCommand);
     }
     [Button]
     public void TriggerLoad()
     {
         AsyncCommand loadCommand = new AsyncCommand("LoadData", LoadAsync);
-        CommandManager.ExecuteCommand(loadCommand);
+        CommandRunner.ExecuteCommand(loadCommand);
     }
     
     

@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defaultIcon: {fileID: 2800000, guid: 6c7e1f66c18df5f4f9547686e17021b5, type: 3}
   buildScenes:
-  - rid: 3585398063832236103
+  - rid: 3585398112987906146
   references:
     version: 2
     RefIds:
-    - rid: 3585398063832236103
+    - rid: 3585398112987906146
       type: {class: BuildSceneReference, ns: , asm: Assembly-CSharp-Editor}
       data:
         scenePath: Assets/_Assets/Scenes/DrivableDemo.unity

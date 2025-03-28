@@ -12,6 +12,10 @@ public class MessageListenerSet : RuntimeSet<InterfaceReference<IMessageListener
             reference.UnderlyingValue = obj;
             Add(reference);
         }
+        else
+        {
+            throw new System.InvalidCastException("Object does not implement IMessageListener");
+        }
     }
     
     
@@ -21,6 +25,10 @@ public class MessageListenerSet : RuntimeSet<InterfaceReference<IMessageListener
         if(isInSet)
         {
             items.RemoveAll(x => x.UnderlyingValue == obj);
+        }
+        else
+        {
+            throw new System.InvalidOperationException("Object is not in the set");
         }
     }
 }

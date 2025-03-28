@@ -69,17 +69,29 @@ public class AsyncCommand : BaseCommand
 
 
 [ExecuteAlways]
-public class CommandManager : PersistentMonoBehaviour<CommandManager>
+public class CommandRunner : PersistentMonoBehaviour<CommandRunner>
 {
+    
     private static List<ICommand> ongoingCommands = new();
+    private static List<ICommand> _completedCommands = new();
+    
+    
     private static CommandInvoker _invoker = new CommandInvoker();
     
+    [Title("Commands")]
     [ShowInInspector]
-    public List<ICommand> onGoingCommands => ongoingCommands;
+    public List<ICommand> OnGoingCommands => ongoingCommands;
+    
+    [ShowInInspector]
+    public List<ICommand> CompletedCommands => _completedCommands;
+    
+    
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     private static void Init()
     {
+        _completedCommands = new List<ICommand>();
+        ongoingCommands = new List<ICommand>();
         Initialize();
     }
     private void OnEnable()
@@ -97,8 +109,11 @@ public class CommandManager : PersistentMonoBehaviour<CommandManager>
     
     private void OnCommandExecuted(ICommand command)
     {
-        if(ongoingCommands.Contains(command))
+        if (ongoingCommands.Contains(command))
+        {
             ongoingCommands.Remove(command);
+            _completedCommands.Add(command);
+        }
     }
 
 
@@ -115,11 +130,7 @@ public class CommandManager : PersistentMonoBehaviour<CommandManager>
         await _invoker.ExecuteCommand(command);
         
     }
-    
-    public static void EnsureCommandManagerExists()
-    {
-        
-    }
+
 
     [Serializable]
     private class CommandInvoker

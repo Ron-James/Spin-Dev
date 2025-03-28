@@ -10,7 +10,7 @@ using UnityEngine.Serialization;
 
 public abstract class RuntimeSet<T> : SerializableScriptableObject, IEnumerable<T>, ISceneCycleListener
 {
-    [SerializeField] List<T> items = new List<T>();
+    [SerializeField] protected List<T> items = new List<T>();
     
     
     public virtual void Add(T item)

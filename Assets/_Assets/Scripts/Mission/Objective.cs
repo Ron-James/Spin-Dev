@@ -84,6 +84,7 @@ public abstract class Objective : SerializableScriptableObject, ISceneCycleListe
     public virtual void Init(Mission mission)
     {
         attachedMission = mission;
+        
         if (startLocked)
         {
             IsActive = false;
@@ -223,7 +224,7 @@ public abstract class Objective : SerializableScriptableObject, ISceneCycleListe
     /// <param name="objective"></param>
     public virtual void OnObjectiveCompleted(Objective objective)
     {
-        if (IsLocked() && ValidatePrerequisites())
+        if (IsLocked() && CheckPrerequisites())
         {
             Unlock();
         }
@@ -233,8 +234,8 @@ public abstract class Objective : SerializableScriptableObject, ISceneCycleListe
     /// <summary>
     /// Check if prerequisites objectives are completed.
     /// </summary>
-    /// <returns>True if all prerequesits have been marked as complete</returns>
-    public bool ValidatePrerequisites()
+    /// <returns>True if all prerequisits have been marked as complete</returns>
+    public bool CheckPrerequisites()
     {
         if(!IsLocked()) return true;
         foreach (var prerequisite in prerequisites)

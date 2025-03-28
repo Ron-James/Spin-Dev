@@ -8,13 +8,18 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Mission", menuName = "Mission")]
 public class Mission : SerializableScriptableObject, IEnumerable<Objective>
 {
-    [SerializeField, ReadOnly, Tooltip("Reference to the mission manager which stores ongoing/completed missions")] private MissionDataManager missionDataManager;
-    [SerializeField, Tooltip("References to the objectives which the user must satisfy to complete this mission")] private Objective[] objectives = Array.Empty<Objective>();
+    [SerializeField, ReadOnly, Tooltip("Reference to the mission manager which stores ongoing/completed missions")] 
+    private MissionDataManager missionDataManager;
+    public MissionDataManager DataManager => missionDataManager;
+    [SerializeField, Tooltip("References to the objectives which the user must satisfy to complete this mission")] 
+    private Objective[] objectives = Array.Empty<Objective>();
 
     
+
+
     public void CompleteObjective(Objective objective)
     {
-        missionDataManager.CompleteObjective(objective);
+        DataManager.CompleteObjective(objective);
         CheckRemainingObjectives();
     }
     
@@ -37,7 +42,7 @@ public class Mission : SerializableScriptableObject, IEnumerable<Objective>
     {
         try
         {
-            missionDataManager.CompleteMission(this);
+            DataManager.CompleteMission(this);
         }
         catch (Exception e)
         {
@@ -65,7 +70,7 @@ public class Mission : SerializableScriptableObject, IEnumerable<Objective>
     
     public void StartObjective(Objective objective)
     {
-        missionDataManager.StartObjective(objective);
+        DataManager.StartObjective(objective);
     }
     
     /// <summary>
