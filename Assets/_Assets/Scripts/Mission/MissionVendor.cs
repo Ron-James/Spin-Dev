@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class MissionVendor : MonoBehaviour
 {
-    [SerializeField] private MissionDataManager _missionDataManager;
-    [SerializeField] Mission _mission;
+    [SerializeField] MissionObjective objective;
+    [SerializeField] MissionDataManager dataManager;
     
     
     [Button]
     public void StartMission()
     {
-        _missionDataManager.AddMission(_mission);
+        dataManager.AddMission(objective);
     }
     
 }

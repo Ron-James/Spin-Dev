@@ -8,7 +8,6 @@ using Object = UnityEngine.Object;
 
 [CustomPropertyDrawer(typeof(InterfaceReference<>))]
 [CustomPropertyDrawer(typeof(InterfaceReference<,>))]
-
 public class InterfaceReferenceDrawer : PropertyDrawer {
     const string UnderlyingValueFieldName = "underlyingValue";
 

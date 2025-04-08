@@ -1,16 +1,19 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using Unity.VisualScripting;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "MessageListener", menuName = "Runtime Sets/MessageListener")]
-public class MessageListenerSet : RuntimeSet<InterfaceReference<IMessageListener>>
+public class MessageListenerSet : RuntimeSet<IMessageListener>
 {
+
+    [SerializeField] private InterfaceReference<IMessageListener> test;
+    [Button]
     public void Add(UnityEngine.Object obj)
     {
-        if(obj is IMessageListener listener)
+        IMessageListener listener = obj.GetComponent<IMessageListener>();
+        if(listener != null)
         {
-            InterfaceReference<IMessageListener> reference = new InterfaceReference<IMessageListener>();
-            reference.Value = listener;
-            reference.UnderlyingValue = obj;
-            Add(reference);
+            Add(listener);
         }
         else
         {
@@ -18,13 +21,14 @@ public class MessageListenerSet : RuntimeSet<InterfaceReference<IMessageListener
         }
     }
     
-    
+    [Button]
     public void Remove(UnityEngine.Object obj)
     {
-        bool isInSet = items.Exists(x => x.UnderlyingValue == obj);
+        IMessageListener listener = obj.GetComponent<IMessageListener>();
+        bool isInSet = items.Exists(listener.Equals);
         if(isInSet)
         {
-            items.RemoveAll(x => x.UnderlyingValue == obj);
+            items.RemoveAll(x => listener.Equals(x));
         }
         else
         {

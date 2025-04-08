@@ -15,7 +15,7 @@ public class MessageListenerSetInitializer : MonoBehaviour, IInitializable
         {
             foreach (var mono in GetComponentsInChildren<MonoBehaviour>(true))
             {
-                if(mono is IMessageListener && mono is UnityEngine.Object obj)
+                if(mono is IMessageListener)
                 {
                     if (add)
                     {
@@ -34,19 +34,23 @@ public class MessageListenerSetInitializer : MonoBehaviour, IInitializable
             {
                 if (add)
                 {
-                    _runtimeSet.Add(item);
+                    _runtimeSet.Add(item.UnderlyingValue);
                 }
                 else
                 {
-                    _runtimeSet.Remove(item);
+                    _runtimeSet.Remove(item.UnderlyingValue);
                 }
             }
         }
     }
     public Task Init()
     {
-        
+        RegisterItems(true);
         return Task.CompletedTask;
     }
-    
+
+    private void OnDisable()
+    {
+        RegisterItems(false);
+    }
 }

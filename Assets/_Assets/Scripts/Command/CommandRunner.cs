@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using static System.Activator;
 
@@ -43,7 +44,34 @@ public abstract class BaseCommand : ICommand
     }
     
 }
-
+[Serializable]
+public class DelayedActionCmd : BaseCommand
+{
+    private UnityAction _action;
+    private float _delay;
+    public DelayedActionCmd()
+    {
+        
+    }
+    public DelayedActionCmd(UnityAction action, float delay)
+    {
+        _action = action;
+        _delay = delay;
+        Name = GetType().Name;
+    }
+    public DelayedActionCmd(string name, UnityAction action, float delay) : base(name)
+    {
+        _action = action;
+        _delay = delay;
+    }
+    public override async Task Execute()
+    {
+        IsExecuting = true;
+        await Awaitable.WaitForSecondsAsync(_delay);
+        _action();
+        IsExecuting = false;
+    }
+}
 [Serializable]
 public class AsyncCommand : BaseCommand
 {

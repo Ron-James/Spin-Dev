@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7299958724046619430}
   - component: {fileID: 1131021705904101046}
   - component: {fileID: 6177644709741037440}
+  - component: {fileID: 7755253676637382364}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -126,6 +127,25 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   onTriggerExit:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &7755253676637382364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 372815373426101882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab9c231495774b58bfabcd533d471a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _event: {fileID: 11400000, guid: 6bf4e7e8a1a76734da97652ba443e788, type: 2}
+  _listenerValues:
+  - trigger: {fileID: 6177644709741037440}
+    other: {fileID: 0}
+  OnMessageRaised:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &1590456076784190770
@@ -265,7 +285,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4781223787514764135}
-  - component: {fileID: 8245865245460630860}
   m_Layer: 0
   m_Name: Demo Mission Colliders
   m_TagString: Untagged
@@ -291,33 +310,6 @@ Transform:
   - {fileID: 1238112394469184256}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8245865245460630860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2433836406078167555}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 879f3d54f0014cc382b91fe96913a97f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  _runtimeSet: {fileID: 11400000, guid: b9bae0fda3d759d449d3494f1ccdd7a3, type: 2}
-  _itemsToRegister:
-  - {fileID: 6177644709741037440}
-  - {fileID: 8968473162029741802}
-  - {fileID: 8001561860093298574}
-  _useChildrenComponents: 1
 --- !u!1 &7139031322445572441
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,101 +1,111 @@
 using System;using System.Collections.Generic;
 using System.Threading.Tasks;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 
-public interface IMessageListener
+public interface IMessageListener 
 {
     UnityAction OnMessageReceived { get; }
 
     void AddListener(UnityAction action);
-    
     void RemoveListener(UnityAction action);
     
+    bool HasReceived { get; set; }
+    
     
 }
 
-
-public abstract class MessageListener<T> : MonoBehaviour, IInitializable, IMessageListener where T : IEquatable<T>
+public interface IMessageListener<T> : IMessageListener where T : IEquatable<T>
 {
-    
-    [SerializeField] EventSO<T> _event;
-    [SerializeField] protected List<T> _listenerValues = new List<T>();
-
-    [SerializeField] protected UnityEvent OnMessageRaised;
-    
-    public UnityAction OnMessageReceived => OnMessageRaised.Invoke;
-    public void AddListener(UnityAction action)
-    {
-        OnMessageRaised.AddListener(action);
-    }
-
-    public void RemoveListener(UnityAction action)
-    {
-        OnMessageRaised.RemoveListener(action);
-    }
-
-    public void OnEventRaised(T value)
-    {
-        if(_listenerValues.Contains(value))
-        {
-            OnMessageRaised.Invoke();
-        }
-    }
-
-    public Task Init()
-    {
-        _event.Subscribe(this, name, OnEventRaised);
-        return Task.CompletedTask;
-    }
-
-
-    private void OnDisable()
-    {
-        _event.UnsubscribeAll(this);
-    }
+    UnityAction<T> OnMessageReceivedTyped { get; }
+    void AddListener(UnityAction<T> action);
+    void RemoveListener(UnityAction<T> action);
 }
+[Serializable]
+public abstract class BaseActionRequirement
+{ 
+    
+    public bool HasCompleteAction { get => _isComplete; set => _isComplete = value; }
+    
+    [GUIColor("@HasCompleteAction ? Color.green : Color.red")]
+    [SerializeField, ReadOnly, Save]
+    protected bool _isComplete;
 
+    public BaseActionRequirement()
+    {
+    }
+    public abstract void Setup(Object parent, string methodName, Action callback = null);
+    public abstract void Dispose(Object parent, string methodName);
 
-public abstract class MessageListenerSO<T> : SerializableScriptableObject, IMessageListener, ISceneCycleListener where T : IEquatable<T>
+    
+    [Button]
+    public virtual void Reset()
+    {
+        HasCompleteAction = false;
+    }
+    
+    
+}
+[Serializable]
+
+public class  ActionRequirement<T> : BaseActionRequirement where T : IEquatable<T>
 {
+    
     [SerializeField] EventSO<T> _event;
-    [SerializeField] protected List<T> _listenerValues = new List<T>();
-
-    [SerializeField] protected UnityEvent OnMessageRaised;
-    public UnityAction OnMessageReceived => OnMessageRaised.Invoke;
-    public void AddListener(UnityAction action)
+    protected Object _parent; 
+    [SerializeField] protected UnityEvent _onMessageRaised = new();
+    public UnityAction OnMessageReceived => _onMessageRaised.Invoke;
+    
+    public event Action messageCallback;
+    private string GetColorForListenerValue(T value)
     {
-        OnMessageRaised.AddListener(action);
+        return HasCompleteAction ? "green" : "red";
     }
 
-    public void RemoveListener(UnityAction action)
+    public ActionRequirement()
     {
-        OnMessageRaised.RemoveListener(action);
     }
+    
 
-    public void OnEventRaised(T value)
+    public override void Setup(Object parent, string methodName, Action callback = null)
     {
-        if(_listenerValues.Contains(value))
+        try
         {
-            OnMessageRaised.Invoke();
+            messageCallback = callback;
+            _event.Subscribe(parent, methodName, OnEventRaised);
+            _parent = parent;
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
         }
     }
-
-
-    public void OnSceneStarted(Scene scene)
+    
+    
+    public override void Dispose(Object parent, string methodName)
     {
-        _event.Subscribe(this, "Listen for messages", OnEventRaised);
+        try
+        {
+            _event.Unsubscribe(parent, methodName);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
     }
-
-    public void OnSceneStopped(Scene scene)
+    
+    public virtual void Complete()
     {
-        _event.UnsubscribeAll(this);
+        HasCompleteAction = true;
+        _onMessageRaised?.Invoke();
+        messageCallback?.Invoke();
     }
-
-    public void OnEditorStopped()
+    protected virtual void OnEventRaised(T value)
     {
-        
+        Complete();
     }
 }

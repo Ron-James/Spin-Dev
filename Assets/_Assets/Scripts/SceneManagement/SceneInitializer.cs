@@ -16,6 +16,7 @@ public interface IInitializable
 
 public class SceneInitializer : SerializedMonoBehaviour
 {
+    [SerializeField] SaveDataManagerSO _saveDataManager;
     [SerializeField] private GameObject _loadingScreen;
     [Title("Scene Components")]
     [SerializeField] private SceneComponent[] _sceneComponents;
@@ -26,6 +27,14 @@ public class SceneInitializer : SerializedMonoBehaviour
     }
     public async Task RunSetup()
     {
+        try
+        {
+            await _saveDataManager.Init();
+        }
+        catch
+        {
+            Debug.LogError("SaveDataManager failed to initialize");
+        }
         if (_loadingScreen) _loadingScreen?.SetActive(true);
         foreach (var sceneComponent in _sceneComponents)
         {
@@ -50,7 +59,7 @@ public class SceneComponent
 
     [SerializeField, ReadOnly] private InterfaceReference<IInitializable>[] _initializables;
     [Title("Prefab"), Tooltip("The level prefab to instantiate or initialize. Can Be gameobject or IInitializable asset.")]
-    [SerializeField] UnityEngine.Object _prefab;
+    [SerializeField] private Object _prefab;
 
     [SerializeField, ReadOnly, ShowIf("ValidatePrefabGameObject")]
     private GameObject _instance;

@@ -11,14 +11,14 @@ public class ColliderChannel : SerializableScriptableObject
     public EventSO<CollisionData> OnTriggerExit => OnTriggerExitVR.Event;
     public EventSO<CollisionData> OnTriggerEnter => OnTriggerEnterVR.Event;
 
-    public void TriggerEntered(ColliderTrigger trigger, Collider other)
+    public void TriggerEntered(ColliderTrigger other)
     {
-        OnTriggerEnterVR.CurrentValue = new CollisionData(trigger, other);
+        OnTriggerEnterVR.CurrentValue = new CollisionData(other);
     }
     
-    public void TriggerExited(ColliderTrigger trigger, Collider other)
+    public void TriggerExited(ColliderTrigger other)
     {
-        OnTriggerExitVR.CurrentValue = new CollisionData(trigger, other);
+        OnTriggerExitVR.CurrentValue = new CollisionData(other);
     }
     
     

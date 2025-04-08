@@ -4,16 +4,15 @@ using Unity.XR.OpenVR;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class BaseEventListener : MonoBehaviour
+public class BaseEventListener : MonoBehaviour, IInitializable
 {
-    [SerializeField] string _methodName = "Response";
     [SerializeField] private BaseEventSO _event;
     [SerializeField] private UnityEvent _response;
 
 
     private void OnEnable()
     {
-        _event.Subscribe(this, _methodName, OnEventRaised);
+        
     }
 
     private void OnDisable()
@@ -24,5 +23,11 @@ public class BaseEventListener : MonoBehaviour
     public virtual void OnEventRaised()
     {
         _response.Invoke();
+    }
+
+    public Task Init()
+    {
+        _event.Subscribe(this, nameof(OnEventRaised), OnEventRaised);
+        return Task.CompletedTask;
     }
 }

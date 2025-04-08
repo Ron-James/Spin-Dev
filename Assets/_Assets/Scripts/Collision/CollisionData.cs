@@ -1,64 +1,32 @@
 ﻿using System;
 using Sirenix.OdinInspector;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-
-[Serializable]
-public class CollisionEnteredData : CollisionData
-{
-    
-    [SerializeField, ReadOnly] private bool hasEntered;
-    
-    public bool HasEntered
-    {
-        get => hasEntered;
-        set => hasEntered = value;
-    }
-
-
-    public void Enter()
-    {
-        hasEntered = true;
-    }
-    
-    public void Exit()
-    {
-        hasEntered = false;
-    }
-    
-    
-    public CollisionEnteredData(ColliderTrigger trigger, Collider other) : base(trigger, other)
-    {
-        HasEntered = false;
-    }
-}
 [Serializable]
 public class CollisionData : IEquatable<CollisionData>
 {
-    protected ColliderTrigger trigger;
-    protected Collider other;
+    [SerializeField] protected MonoReference<ColliderTrigger> otherCollider = new();
+    public CollisionData()
+    {
+        
+    }
+    public CollisionData(ColliderTrigger otherCollider)
+    {
+        this.otherCollider = otherCollider;
+    }
+
+    public ColliderTrigger OtherCollider
+    {
+        get => otherCollider.Value;
+        set => otherCollider = value.gameObject;
+    }
     
-    public CollisionData(ColliderTrigger trigger, Collider other)
-    {
-        this.Trigger = trigger;
-        this.Other = other;
-    }
-
-    public Collider Other
-    {
-        get => other;
-        set => other = value;
-    }
-
-    public ColliderTrigger Trigger
-    {
-        get => trigger;
-        protected set => trigger = value;
-    }
 
     public bool Equals(CollisionData other)
     {
-        return Equals(Trigger, other.Trigger) && Equals(this.Other, other.Other);
+        return Equals(this.OtherCollider, other.OtherCollider);
     }
 
     public override bool Equals(object obj)
@@ -68,6 +36,6 @@ public class CollisionData : IEquatable<CollisionData>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Trigger, Other);
+        return otherCollider != null ? otherCollider.GetHashCode() : 0;
     }
 }

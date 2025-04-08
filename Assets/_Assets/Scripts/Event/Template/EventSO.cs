@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using CustomSceneReference;
 using Sirenix.OdinInspector;
@@ -34,9 +36,54 @@ public interface IEvent<T> : IEvent
 public class BaseEventSubscriber : IEquatable<BaseEventSubscriber>
 {
     [SerializeField] protected Object _origin;
-    [SerializeField] protected string _methodName;
+    [SerializeField, ValueDropdown(nameof(GetValidMethodNames))]
+    [OnValueChanged(nameof(UpdateResponse))]
+    protected string _methodName;
     [SerializeField] protected UnityAction _response;
     
+    /// <summary>
+    /// Populates the method dropdown with valid UnityAction-compatible methods.
+    /// </summary>
+    private IEnumerable<string> GetValidMethodNames()
+    {
+        if (_origin == null) return Enumerable.Empty<string>();
+
+        return _origin.GetType()
+            .GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+            .Where(m => m.GetParameters().Length == 0 && m.ReturnType == typeof(void))
+            .Select(m => m.Name);
+    }
+
+    /// <summary>
+    /// Dynamically generates the UnityAction delegate from method info.
+    /// </summary>
+    protected virtual void UpdateResponse()
+    {
+        if (_origin == null || string.IsNullOrEmpty(_methodName))
+        {
+            _response = null;
+            return;
+        }
+
+        MethodInfo method = _origin.GetType().GetMethod(_methodName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+        if (method != null && method.GetParameters().Length == 0 && method.ReturnType == typeof(void))
+        {
+            try
+            {
+                _response = (UnityAction)Delegate.CreateDelegate(typeof(UnityAction), _origin, method);
+            }
+            catch
+            {
+                Debug.LogWarning($"Could not bind method '{_methodName}' on {_origin.name}");
+                _response = null;
+            }
+        }
+        else
+        {
+            _response = null;
+        }
+    }
     
     public UnityAction Response => _response;
 
@@ -52,6 +99,8 @@ public class BaseEventSubscriber : IEquatable<BaseEventSubscriber>
         UnityAction response = null;
         _methodName = null;
     }
+    
+
 
     public BaseEventSubscriber()
     {
@@ -107,6 +156,11 @@ public class EventSubscriber<T> : BaseEventSubscriber
         protected set => _response = value;
     }
     
+    
+    public EventSubscriber()
+    {
+        
+    }
     
 
     public Object Origin => base.Origin;
@@ -168,17 +222,15 @@ public abstract class BaseEventSO : SerializableScriptableObject, IEvent, IScene
 public abstract class EventSO<T> : BaseEventSO, IEvent<T>
 {
     [SerializeField] private T _defaultValue;
-    [SerializeReference] protected List<EventSubscriber<T>> _messgaeSubscribers = new();
-    
-    
+    [SerializeReference] protected List<EventSubscriber<T>> _messageSubscribers = new();
     
     [ShowInInspector]
-    public T LastValueRaised {get; private set;}
+    public T LastValueRaised {get; protected set;}
 
     public override void OnEditorStopped()
     {
         base.OnEditorStopped();
-        _messgaeSubscribers.Clear();
+        _messageSubscribers.Clear();
         LastValueRaised = _defaultValue;
     }
 
@@ -196,12 +248,19 @@ public abstract class EventSO<T> : BaseEventSO, IEvent<T>
     {
         
         RemoveNullSubscribers();
-        for(int index = _messgaeSubscribers.Count - 1; index >= 0; index--)
+        for(int index = _messageSubscribers.Count - 1; index >= 0; index--)
         {
-            
-             _messgaeSubscribers[index].response?.Invoke(value);
+            try
+            {
+                _messageSubscribers[index].response?.Invoke(value);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Error raising event: {e.Message}");
+            }
+             
         }
-        this.HasRaised = true;
+        HasRaised = true;
         LastValueRaised = value;
 
     }
@@ -214,9 +273,9 @@ public abstract class EventSO<T> : BaseEventSO, IEvent<T>
     {
         //Remove any null subscribers
         RemoveNullSubscribers();
-        for(int index = _messgaeSubscribers.Count - 1; index >= 0; index--)
+        for(int index = _messageSubscribers.Count - 1; index >= 0; index--)
         {
-            _messgaeSubscribers[index].response?.Invoke(_defaultValue);
+            _messageSubscribers[index].response?.Invoke(_defaultValue);
         }
         HasRaised = true;
         LastValueRaised = _defaultValue;
@@ -229,11 +288,11 @@ public abstract class EventSO<T> : BaseEventSO, IEvent<T>
     public override void RemoveNullSubscribers()
     {
         base.RemoveNullSubscribers();
-        for (int i = 0; i < _messgaeSubscribers.Count; i++)
+        for (int i = 0; i < _messageSubscribers.Count; i++)
         {
-            if (_messgaeSubscribers[i] ==null)
+            if (_messageSubscribers[i] ==null)
             {
-                _messgaeSubscribers.RemoveAt(i);
+                _messageSubscribers.RemoveAt(i);
             }
         }
     }
@@ -247,7 +306,7 @@ public abstract class EventSO<T> : BaseEventSO, IEvent<T>
     public override void Subscribe(Object origin, string method, UnityAction response)
     {
         EventSubscriber<T> subscriber = new EventSubscriber<T>(origin, method, (value) => response());
-        _messgaeSubscribers.Add(subscriber);
+        _messageSubscribers.Add(subscriber);
     }
     /// <summary>
     /// Add a new subscriber to the event callback
@@ -258,17 +317,17 @@ public abstract class EventSO<T> : BaseEventSO, IEvent<T>
     public virtual void Subscribe(Object origin, string methodName, UnityAction<T> response)
     {
         EventSubscriber<T> subscriber = new EventSubscriber<T>(origin, methodName, response);
-        _messgaeSubscribers.Add(subscriber);
+        _messageSubscribers.Add(subscriber);
     }
 
     public override void UnsubscribeAll(Object origin)
     {
         //loop through subscribers and remove all subscribers with the same origin
-        for(int i = _messgaeSubscribers.Count - 1; i >= 0; i--)
+        for(int i = _messageSubscribers.Count - 1; i >= 0; i--)
         {
-            if(_messgaeSubscribers[i].Origin == origin)
+            if(_messageSubscribers[i].Origin == origin)
             {
-                _messgaeSubscribers[i] = null;
+                _messageSubscribers[i] = null;
             }
             RemoveNullSubscribers();
         }
@@ -276,11 +335,11 @@ public abstract class EventSO<T> : BaseEventSO, IEvent<T>
 
     public override void Unsubscribe(Object origin, string methodName)
     {
-        for(int index = _messgaeSubscribers.Count - 1; index >= 0; index--)
+        for(int index = _messageSubscribers.Count - 1; index >= 0; index--)
         {
-            if(_messgaeSubscribers[index].Origin == origin && _messgaeSubscribers[index].Origin.name == methodName)
+            if(_messageSubscribers[index].Origin == origin && _messageSubscribers[index].Origin.name == methodName)
             {
-                _messgaeSubscribers[index].SetNull();
+                _messageSubscribers[index] = null;
             }
         }
         

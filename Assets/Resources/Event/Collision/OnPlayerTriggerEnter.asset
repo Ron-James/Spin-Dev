@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eddf237bdef4643a0666f25ba76f55f, type: 3}
+  m_Name: OnPlayerTriggerEnter
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: HasRaised
+      Entry: 5
+      Data: true
+  persistThroughSceneChanges: 0
+  _subscribers:
+  - rid: 3585397972991214341
+  - rid: 3585397972991214370
+  - rid: 3585397972991214371
+  - rid: 3585397972991214378
+  - rid: 3585397972991214388
+  - rid: 3585397972991214389
+  - rid: 3585397972991214396
+  - rid: 3585397972991214416
+  references:
+    version: 2
+    RefIds:
+    - rid: 3585397972991214341
+      type: {class: 'EventSubscriber`1[[CollisionData, Assembly-CSharp]]', ns: , asm: Assembly-CSharp}
+      data:
+        _origin: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
+        _methodName: OnTriggerEnterMessage
+    - rid: 3585397972991214370
+      type: {class: 'EventSubscriber`1[[CollisionData, Assembly-CSharp]]', ns: , asm: Assembly-CSharp}
+      data:
+        _origin: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
+        _methodName: OnTriggerEnterMessage
+    - rid: 3585397972991214371
+      type: {class: 'EventSubscriber`1[[CollisionData, Assembly-CSharp]]', ns: , asm: Assembly-CSharp}
+      data:
+        _origin: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
+        _methodName: OnTriggerEnterMessage
+    - rid: 3585397972991214378
+      type: {class: 'EventSubscriber`1[[CollisionData, Assembly-CSharp]]', ns: , asm: Assembly-CSharp}
+      data:
+        _origin: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
+        _methodName: OnTriggerEnterMessage
+    - rid: 3585397972991214388
+      type: {class: 'EventSubscriber`1[[CollisionData, Assembly-CSharp]]', ns: , asm: Assembly-CSharp}
+      data:
+        _origin: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
+        _methodName: OnTriggerEnterMessage
+    - rid: 3585397972991214389
+      type: {class: 'EventSubscriber`1[[CollisionData, Assembly-CSharp]]', ns: , asm: Assembly-CSharp}
+      data:
+        _origin: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
+        _methodName: OnTriggerEnterMessage
+    - rid: 3585397972991214396
+      type: {class: 'EventSubscriber`1[[CollisionData, Assembly-CSharp]]', ns: , asm: Assembly-CSharp}
+      data:
+        _origin: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
+        _methodName: OnTriggerEnterMessage
+    - rid: 3585397972991214416
+      type: {class: 'EventSubscriber`1[[CollisionData, Assembly-CSharp]]', ns: , asm: Assembly-CSharp}
+      data:
+        _origin: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
+        _methodName: OnTriggerEnterMessage

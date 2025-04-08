@@ -11,7 +11,7 @@ using Sirenix.Utilities.Editor;
 using Sirenix.Utilities;
 using UnityEditor.Experimental.GraphView;
 
-
+#if UNITY_EDITOR
 namespace ScriptsbleObjectExplorer
 {
     /// <summary>
@@ -567,3 +567,5 @@ namespace ScriptsbleObjectExplorer
     }
 
 }
+
+#endif

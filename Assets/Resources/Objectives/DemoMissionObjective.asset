@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2048c1aacd455a4685ce1926c4ce2a0, type: 3}
+  m_Name: DemoMissionObjective
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  guid: 6c94e48d-0d6e-4586-b3ba-9cd53f492a1c
+  _delay: 0.5
+  dataManager: {fileID: 0}
+  progress: 0
+  messageRequirements:
+  - rid: 6502415207164280944
+  - rid: 6502415207164280945
+  testValue: 1
+  OnComplete:
+    m_PersistentCalls:
+      m_Calls: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 6502415207164280944
+      type: {class: CollisionActionRequirement, ns: , asm: Assembly-CSharp}
+      data:
+        _isComplete: 0
+        _event: {fileID: 11400000, guid: 6732ab7020faf664bbd29f51b0baf258, type: 2}
+        _onMessageRaised:
+          m_PersistentCalls:
+            m_Calls: []
+        targetCollider:
+          _dropInReference: {fileID: 0}
+          _name: Cube
+          guid: 45a36477-4959-46e1-bdf7-e6ad270b757a
+    - rid: 6502415207164280945
+      type: {class: CollisionActionRequirement, ns: , asm: Assembly-CSharp}
+      data:
+        _isComplete: 0
+        _event: {fileID: 11400000, guid: 6732ab7020faf664bbd29f51b0baf258, type: 2}
+        _onMessageRaised:
+          m_PersistentCalls:
+            m_Calls: []
+        targetCollider:
+          _dropInReference: {fileID: 0}
+          _name: Cube_1
+          guid: 1cadb22a-7018-4fe5-872c-2a4847fa7323

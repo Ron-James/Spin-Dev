@@ -84,7 +84,7 @@ public static class ScriptableObjectManager
     }
 
     // Retrieve asset by GUID for a specified type.
-    public static T GetAssetByGuid<T>(string guid) where T : ScriptableObject
+    public static T GetAssetByGuid<T>(string guid) where T : ScriptableObject, IGuidAsset
     {
         foreach (var kvp in registry)
         {
@@ -101,7 +101,18 @@ public static class ScriptableObjectManager
         return null;
     }
 
-    
+    public static ScriptableObject GetAssetByGuid(string guid)
+    {
+        foreach (var kvp in registry)
+        {
+            if (kvp.Value.TryGetValue(guid, out ScriptableObject asset))
+            {
+                return asset;
+            }
+        }
+        Debug.LogWarning($"Asset with GUID {guid} not found.");
+        return null;
+    }
     
     public static T[] GetAssetsByType<T>() where T : ScriptableObject, IGuidAsset
     {

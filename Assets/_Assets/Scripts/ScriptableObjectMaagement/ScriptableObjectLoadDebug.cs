@@ -15,9 +15,4 @@ public class ScriptableObjectLoadDebug : SerializedMonoBehaviour
         _scriptableObjects = ScriptableObjectManager.All;
     }
     
-    [Button]
-    public ScriptableObject GetObjectbyGUID(string guid)
-    {
-        return ScriptableObjectManager.GetAssetByGuid<ScriptableObject>(guid);
-    }
 }

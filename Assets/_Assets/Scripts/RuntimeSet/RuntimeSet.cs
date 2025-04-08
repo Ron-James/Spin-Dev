@@ -10,9 +10,11 @@ using UnityEngine.Serialization;
 
 public abstract class RuntimeSet<T> : SerializableScriptableObject, IEnumerable<T>, ISceneCycleListener
 {
-    [SerializeField] protected List<T> items = new List<T>();
+    [SerializeField] protected readonly List<T> items = new List<T>();
     
+    public List<T> Items => items;
     
+    [Button]
     public virtual void Add(T item)
     {
         if (!items.Contains(item))
@@ -21,6 +23,8 @@ public abstract class RuntimeSet<T> : SerializableScriptableObject, IEnumerable<
         }
     }
     
+    
+    [Button]
     public virtual void Remove(T item)
     {
         if (items.Contains(item))
@@ -29,7 +33,7 @@ public abstract class RuntimeSet<T> : SerializableScriptableObject, IEnumerable<
         }
     }
     
-    
+    [Button]
     public virtual void Clear()
     {
         items.Clear();
@@ -62,7 +66,13 @@ public abstract class RuntimeSet<T> : SerializableScriptableObject, IEnumerable<
 
     public virtual void OnSceneStopped(Scene scene)
     {
-        //Clear();
+        foreach(T item in items)
+        {
+            if (item is null)
+            {
+                Remove(item);
+            }
+        }
     }
 
     public void OnEditorStopped()

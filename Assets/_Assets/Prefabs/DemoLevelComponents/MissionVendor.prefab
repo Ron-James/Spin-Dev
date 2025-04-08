@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3992c763397f4a4b95c5c29133a50e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _missionDataManager: {fileID: 11400000, guid: 3c2d9e9da2d0d4c499536720b46e69e6, type: 2}
-  _mission: {fileID: 11400000, guid: 68f877ce0221ee9499eab9dc22d699e0, type: 2}
+  objective: {fileID: 11400000, guid: 3c27d4f2fca48654290d92405c863b12, type: 2}
+  dataManager: {fileID: 11400000, guid: 3c2d9e9da2d0d4c499536720b46e69e6, type: 2}

@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [CreateAssetMenu(fileName = "InventoryDataManager", menuName = "InventoryDataManager")]
-public class InventoryDataManager : SerializableScriptableObject, ISceneCycleListener, ISaveable, IInitializable
+public class InventoryDataManager : SerializableScriptableObject, ISceneCycleListener, IInitializable
 {
     [SerializeField] private Dictionary<Item, int> inventory = new();
 
@@ -39,7 +39,7 @@ public class InventoryDataManager : SerializableScriptableObject, ISceneCycleLis
     [Button]
     public void AddItem(ItemData itemData)
     {
-        AddItem(itemData.Item.Value, itemData.Quantity);
+        AddItem(itemData.ItemReference.Value, itemData.Quantity);
     }
     
     
@@ -58,24 +58,9 @@ public class InventoryDataManager : SerializableScriptableObject, ISceneCycleLis
         return inventory.ContainsKey(item) && inventory[item] >= amount;
     }
 
-    public SaveDataContainer GetSaveData()
-    {
-        return new InventorySaveData(this);
-    }
+    
 
-    public void LoadSaveData(SaveDataContainer data)
-    {
-        try
-        {
-            InventorySaveData inventorySaveData = (InventorySaveData) data;
-            inventorySaveData.Apply(this);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-    }
+    
 
     public void OnSave()
     {
@@ -122,33 +107,3 @@ public class InventoryDataManager : SerializableScriptableObject, ISceneCycleLis
     }
 }
 
-[Serializable]
-public class InventorySaveData : SaveDataContainer
-{
-    [SerializeField] ItemData[] _inventory;
-
-    
-    
-    public InventorySaveData()
-    {
-        _inventory = Array.Empty<ItemData>();
-    }
-    
-    
-    public InventorySaveData(InventoryDataManager inventoryDataManager)
-    {
-        _inventory = inventoryDataManager.Inventory.Select(kvp => new ItemData(kvp.Key, kvp.Value)).ToArray();
-    }
-
-
-
-    public void Apply(InventoryDataManager inventoryDataManager)
-    {
-        foreach (var itemData in _inventory)
-        {
-            inventoryDataManager.AddItem(itemData.Item.Value, itemData.Quantity);
-        }
-    }
-    
-    
-}
