@@ -15,13 +15,14 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: f7ba4e0fb7bf52b419013dfdc7ba70f8, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: items
+    - Name: inventory
       Entry: 7
       Data: 0|System.Collections.Generic.Dictionary`2[[Item, Assembly-CSharp],[System.Int32,
         mscorlib]], mscorlib
@@ -41,5 +42,37 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  guid: 0cabbbd0-13a2-49a3-909b-36073e3f4f26
-  allItems: []
+    - Name: lastAddedItemData
+      Entry: 7
+      Data: 2|ActionReference`1[[ItemData, Assembly-CSharp]], Assembly-CSharp
+    - Name: useValue
+      Entry: 5
+      Data: false
+    - Name: _value
+      Entry: 7
+      Data: 3|ItemData, Assembly-CSharp
+    - Name: item
+      Entry: 6
+      Data: 
+    - Name: itemReference
+      Entry: 6
+      Data: 
+    - Name: quantity
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: assetReference
+      Entry: 10
+      Data: 0
+    - Name: editAsset
+      Entry: 5
+      Data: false
+    - Name: _assetReference
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+  guid: da094c16-f66c-405d-a88f-dbdc49dbe1d1

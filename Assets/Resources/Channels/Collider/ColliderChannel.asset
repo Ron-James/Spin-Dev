@@ -15,16 +15,54 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 6bf4e7e8a1a76734da97652ba443e788, type: 2}
+    - {fileID: 11400000, guid: 8d4a4e86c56cf744f9167a76bd479515, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
-  guid: 09a8b1de-360c-4443-a2b6-d60dfdba3a3a
-  OnTriggerEnterVR:
-    _event: {fileID: 11400000, guid: 6bf4e7e8a1a76734da97652ba443e788, type: 2}
-    _isConstant: 1
-  OnTriggerExitVR:
-    _event: {fileID: 11400000, guid: 8d4a4e86c56cf744f9167a76bd479515, type: 2}
-    _isConstant: 1
+    SerializationNodes:
+    - Name: OnTriggerEnterVR
+      Entry: 7
+      Data: 0|ActionReference`1[[CollisionData, Assembly-CSharp]], Assembly-CSharp
+    - Name: useValue
+      Entry: 5
+      Data: false
+    - Name: _value
+      Entry: 6
+      Data: 
+    - Name: assetReference
+      Entry: 10
+      Data: 0
+    - Name: editAsset
+      Entry: 5
+      Data: false
+    - Name: _assetReference
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: OnTriggerExitVR
+      Entry: 7
+      Data: 1|ActionReference`1[[CollisionData, Assembly-CSharp]], Assembly-CSharp
+    - Name: useValue
+      Entry: 5
+      Data: false
+    - Name: _value
+      Entry: 6
+      Data: 
+    - Name: assetReference
+      Entry: 10
+      Data: 1
+    - Name: editAsset
+      Entry: 5
+      Data: false
+    - Name: _assetReference
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+  guid: 71418e02-93b6-4d53-a5aa-52c9578a70b9

@@ -14,7 +14,7 @@ public class ColliderTrigger : SerializableMonoBehaviour
     {
         other.TryGetComponent<ColliderTrigger>(out var otherTrigger);
         if(otherTrigger == null) return;
-        channel.TriggerEntered(otherTrigger);
+        channel?.TriggerEntered(otherTrigger);
         onTriggerEnter.Invoke(new CollisionData(otherTrigger));
     }
 
@@ -22,7 +22,7 @@ public class ColliderTrigger : SerializableMonoBehaviour
     {
         other.TryGetComponent<ColliderTrigger>(out var otherTrigger);
         if(otherTrigger == null) return;
-        channel.TriggerExited(otherTrigger);
+        channel?.TriggerExited(otherTrigger);
         onTriggerExit.Invoke(new CollisionData(otherTrigger));
     }
 

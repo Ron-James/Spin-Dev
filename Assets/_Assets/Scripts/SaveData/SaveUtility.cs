@@ -4,144 +4,233 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using Sirenix.Serialization;
 
 /// <summary>
-/// Utility methods for creating and restoring POCO save data using [Save] filtered fields.
+/// Utility methods for extracting and applying save data using [Save] filtering.
+/// Handles nested structures, lists, dictionaries, abstract types, and skips events/delegates.
 /// </summary>
 public static class SaveUtility
 {
     /// <summary>
-    /// Creates a filtered POCO deep copy of the source object using Odin and [Save] field filtering.
+    /// Extracts top-level fields marked with [Save] and recursively captures their data.
     /// </summary>
-    public static T GetFilteredState<T>(object source) where T : class, new()
+    public static Dictionary<string, object> ExtractSaveData(object source)
     {
-        var clone = SerializationUtility.CreateCopy(source); // Odin deep copy
-        var result = new T();
-        CopyFilteredFields(clone, result);
-        return result;
-    }
-
-    /// <summary>
-    /// Applies [Save] fields from the POCO object into the target runtime instance.
-    /// </summary>
-    public static void RestoreFilteredState(object saved, object target)
-    {
-        CopyFilteredFields(saved, target);
-    }
-
-    /// <summary>
-    /// Recursively copies only [Save]-marked fields from source to target, including collections and polymorphic types.
-    /// </summary>
-    private static void CopyFilteredFields(object source, object target)
-    {
-        if (source == null || target == null) return;
-
-        var type = source.GetType();
-        var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        var data = new Dictionary<string, object>();
+        var fields = source.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
         foreach (var field in fields)
         {
             if (!field.IsDefined(typeof(SaveAttribute), true)) continue;
+            if (typeof(Delegate).IsAssignableFrom(field.FieldType)) continue;
 
-            var sourceValue = field.GetValue(source);
-            var fieldType = field.FieldType;
+            var value = field.GetValue(source);
+            data[field.Name] = ExtractNestedValue(value);
+        }
 
-            if (IsSimple(fieldType))
+        return data;
+    }
+
+    /// <summary>
+    /// Applies a saved dictionary to a runtime instance, applying only [Save] fields.
+    /// </summary>
+    public static void ApplySaveData(object target, Dictionary<string, object> saved)
+    {
+        if (target == null || saved == null) return;
+
+        var fields = target.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+        foreach (var field in fields)
+        {
+            if (!field.IsDefined(typeof(SaveAttribute), true)) continue;
+            if (typeof(Delegate).IsAssignableFrom(field.FieldType)) continue;
+
+            if (!saved.TryGetValue(field.Name, out var value)) continue;
+
+            if (IsSimple(field.FieldType))
             {
-                field.SetValue(target, sourceValue);
-            }
-            else if (typeof(IList).IsAssignableFrom(fieldType))
-            {
-                var clonedList = CloneList(sourceValue as IList);
-                field.SetValue(target, clonedList);
-            }
-            else if (typeof(IDictionary).IsAssignableFrom(fieldType))
-            {
-                var clonedDict = CloneDictionary(sourceValue as IDictionary);
-                field.SetValue(target, clonedDict);
+                field.SetValue(target, value);
             }
             else
             {
-                object targetValue = field.GetValue(target);
-
-                if (sourceValue == null)
+                var current = field.GetValue(target);
+                if (current == null && value != null)
                 {
-                    field.SetValue(target, null);
-                    continue;
+                    current = Activator.CreateInstance(field.FieldType);
+                    field.SetValue(target, current);
                 }
 
-                if (targetValue == null)
-                {
-                    targetValue = Activator.CreateInstance(fieldType);
-                    field.SetValue(target, targetValue);
-                }
-
-                CopyFilteredFields(sourceValue, targetValue); // Recursive
+                ApplyNestedValue(current, value);
             }
         }
     }
 
-    private static IList CloneList(IList source)
-    {
-        if (source == null) return null;
-
-        var elementType = source.GetType().IsArray
-            ? source.GetType().GetElementType()
-            : source.GetType().GetGenericArguments().FirstOrDefault() ?? typeof(object);
-
-        var listType = typeof(List<>).MakeGenericType(elementType);
-        var clonedList = (IList)Activator.CreateInstance(listType);
-
-        foreach (var item in source)
-        {
-            clonedList.Add(CloneValue(item));
-        }
-
-        return clonedList;
-    }
-
-    private static IDictionary CloneDictionary(IDictionary source)
-    {
-        if (source == null) return null;
-
-        var keyType = source.GetType().GetGenericArguments()[0];
-        var valueType = source.GetType().GetGenericArguments()[1];
-        var dictType = typeof(Dictionary<,>).MakeGenericType(keyType, valueType);
-        var clonedDict = (IDictionary)Activator.CreateInstance(dictType);
-
-        foreach (DictionaryEntry entry in source)
-        {
-            clonedDict.Add(CloneValue(entry.Key), CloneValue(entry.Value));
-        }
-
-        return clonedDict;
-    }
-
+    
     /// <summary>
-    /// Clones a single object using Odin for polymorphic types and [Save] reflection otherwise.
+    /// extracts the value of a field, handling lists, dictionaries, and complex objects.
     /// </summary>
-    private static object CloneValue(object value)
+    /// <param name="value">the object to extract from</param>
+    /// <returns></returns>
+    private static object ExtractNestedValue(object value)
     {
         if (value == null) return null;
-
         var type = value.GetType();
+        if (IsSimple(type)) return value;
 
-        if (IsSimple(type))
-            return value;
+        // List extraction
+        if (value is IList list)
+        {
+            //recursively extract the values from the list
+            var newList = new List<object>();
+            foreach (var item in list)
+                newList.Add(ExtractNestedValue(item));
+            return newList;
+        }
 
-        // Step 1: Deep clone the object
-        var deepClone = SerializationUtility.CreateCopy(value);
+        // Dictionary extraction
+        if (value is IDictionary dict)
+        {
+            var newDict = new Dictionary<object, object>();
+            foreach (DictionaryEntry entry in dict)
+                newDict[entry.Key] = ExtractNestedValue(entry.Value);
+            return newDict;
+        }
 
-        // Step 2: Create filtered POCO based on [Save]
-        var filtered = Activator.CreateInstance(type);
-        CopyFilteredFields(deepClone, filtered);
+        // Complex object
+        //Get object type from $type field if available
+        var result = new Dictionary<string, object>
+        {
+            ["$type"] = type.AssemblyQualifiedName // Add type info for rehydration
+        };
 
-        return filtered;
+        var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        foreach (var field in fields)
+        {
+            // Skip non-save fields
+            if (field.IsDefined(typeof(DontSaveAttribute), true)) continue;
+            // Skip events/delegates
+            if (typeof(Delegate).IsAssignableFrom(field.FieldType)) continue;
+
+            // get the field value
+            var nestedValue = field.GetValue(value);
+            result[field.Name] = ExtractNestedValue(nestedValue);
+        }
+
+        return result;
+    }
+
+    // ================================
+    // Recursive application
+    // ================================
+
+    private static void ApplyNestedValue(object target, object saved)
+    {
+        if (target == null || saved == null) return;
+
+        // Handle lists
+        if (target is IList targetList && saved is IList savedList)
+        {
+            targetList.Clear();
+
+            var elementType = target.GetType().IsArray
+                ? target.GetType().GetElementType()
+                : target.GetType().GetGenericArguments().FirstOrDefault() ?? typeof(object);
+
+            foreach (var savedItem in savedList)
+            {
+                if (IsSimple(elementType))
+                {
+                    targetList.Add(savedItem);
+                }
+                else if (savedItem is Dictionary<string, object> savedItemDict)
+                {
+                    // Try to read $type override for polymorphic support
+                    Type actualType = elementType;
+                    if (savedItemDict.TryGetValue("$type", out var typeStrObj) && typeStrObj is string typeStr)
+                    {
+                        var resolvedType = Type.GetType(typeStr);
+                        if (resolvedType != null && !resolvedType.IsAbstract)
+                            actualType = resolvedType;
+                    }
+
+                    var instance = Activator.CreateInstance(actualType);
+                    ApplyNestedValue(instance, savedItemDict);
+                    targetList.Add(instance);
+                }
+            }
+
+            return;
+        }
+
+        // Handle dictionaries (shallow)
+        if (target is IDictionary targetDict && saved is IDictionary savedDict)
+        {
+            targetDict.Clear();
+            foreach (DictionaryEntry entry in savedDict)
+            {
+                targetDict[entry.Key] = entry.Value;
+            }
+            return;
+        }
+
+        // Custom nested object
+        if (saved is Dictionary<string, object> savedFields)
+        {
+            // If polymorphic, replace instance
+            if (savedFields.TryGetValue("$type", out var typeInfoObj) && typeInfoObj is string typeInfo)
+            {
+                var dynamicType = Type.GetType(typeInfo);
+                if (dynamicType != null && dynamicType != target.GetType() && !dynamicType.IsAbstract)
+                {
+                    var replacement = Activator.CreateInstance(dynamicType);
+                    ApplyNestedValue(replacement, savedFields);
+                    CopyFields(replacement, target);
+                    return;
+                }
+            }
+
+            var fields = target.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            foreach (var field in fields)
+            {
+                if (field.IsDefined(typeof(DontSaveAttribute), true)) continue;
+                if (typeof(Delegate).IsAssignableFrom(field.FieldType)) continue;
+
+                if (!savedFields.TryGetValue(field.Name, out var savedValue)) continue;
+
+                if (IsSimple(field.FieldType))
+                {
+                    field.SetValue(target, savedValue);
+                }
+                else
+                {
+                    var fieldTargetValue = field.GetValue(target);
+                    if (fieldTargetValue == null)
+                    {
+                        fieldTargetValue = Activator.CreateInstance(field.FieldType);
+                        field.SetValue(target, fieldTargetValue);
+                    }
+
+                    ApplyNestedValue(fieldTargetValue, savedValue);
+                }
+            }
+        }
     }
 
     /// <summary>
-    /// Determines if a type is simple and can be copied directly.
+    /// Copies all field values from source to target (same type).
+    /// </summary>
+    private static void CopyFields(object source, object target)
+    {
+        var fields = source.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        foreach (var field in fields)
+        {
+            var value = field.GetValue(source);
+            field.SetValue(target, value);
+        }
+    }
+
+    /// <summary>
+    /// Returns true if the type can be stored directly without recursion or inspection.
     /// </summary>
     private static bool IsSimple(Type type)
     {

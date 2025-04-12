@@ -26,36 +26,29 @@ MonoBehaviour:
   dataManager: {fileID: 0}
   progress: 0
   messageRequirements:
-  - rid: 6502415207164280944
-  - rid: 6502415207164280945
-  testValue: 1
+  - rid: 6502415295283724408
+  - rid: 6502415295283724409
   OnComplete:
     m_PersistentCalls:
       m_Calls: []
   references:
     version: 2
     RefIds:
-    - rid: 6502415207164280944
-      type: {class: CollisionActionRequirement, ns: , asm: Assembly-CSharp}
+    - rid: 6502415295283724408
+      type: {class: AreaObjective, ns: , asm: Assembly-CSharp}
       data:
         _isComplete: 0
-        _event: {fileID: 11400000, guid: 6732ab7020faf664bbd29f51b0baf258, type: 2}
-        _onMessageRaised:
-          m_PersistentCalls:
-            m_Calls: []
         targetCollider:
           _dropInReference: {fileID: 0}
           _name: Cube
-          guid: 45a36477-4959-46e1-bdf7-e6ad270b757a
-    - rid: 6502415207164280945
-      type: {class: CollisionActionRequirement, ns: , asm: Assembly-CSharp}
+          guid: 679e6801-fd5c-4710-9476-169f013aaca0
+        collisionAction: {fileID: 11400000, guid: 3df36ae5a8a4e2146975b4907074e704, type: 2}
+    - rid: 6502415295283724409
+      type: {class: AreaObjective, ns: , asm: Assembly-CSharp}
       data:
         _isComplete: 0
-        _event: {fileID: 11400000, guid: 6732ab7020faf664bbd29f51b0baf258, type: 2}
-        _onMessageRaised:
-          m_PersistentCalls:
-            m_Calls: []
         targetCollider:
           _dropInReference: {fileID: 0}
           _name: Cube_1
-          guid: 1cadb22a-7018-4fe5-872c-2a4847fa7323
+          guid: 79344161-daf3-429d-bce7-99e7355e6987
+        collisionAction: {fileID: 11400000, guid: 3df36ae5a8a4e2146975b4907074e704, type: 2}

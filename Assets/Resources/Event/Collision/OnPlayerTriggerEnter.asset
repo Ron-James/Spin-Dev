@@ -24,56 +24,14 @@ MonoBehaviour:
     - Name: HasRaised
       Entry: 5
       Data: true
-  persistThroughSceneChanges: 0
-  _subscribers:
-  - rid: 3585397972991214341
-  - rid: 3585397972991214370
-  - rid: 3585397972991214371
-  - rid: 3585397972991214378
-  - rid: 3585397972991214388
-  - rid: 3585397972991214389
-  - rid: 3585397972991214396
-  - rid: 3585397972991214416
+  guid: 3c4f7a33-e346-4673-bfc9-29b914ea4b01
+  _subscribers: []
+  _defaultValue:
+    otherCollider:
+      _dropInReference: {fileID: 0}
+      _name: 
+      guid: 
+  _messageSubscribers: []
   references:
     version: 2
-    RefIds:
-    - rid: 3585397972991214341
-      type: {class: 'EventSubscriber`1[[CollisionData, Assembly-CSharp]]', ns: , asm: Assembly-CSharp}
-      data:
-        _origin: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
-        _methodName: OnTriggerEnterMessage
-    - rid: 3585397972991214370
-      type: {class: 'EventSubscriber`1[[CollisionData, Assembly-CSharp]]', ns: , asm: Assembly-CSharp}
-      data:
-        _origin: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
-        _methodName: OnTriggerEnterMessage
-    - rid: 3585397972991214371
-      type: {class: 'EventSubscriber`1[[CollisionData, Assembly-CSharp]]', ns: , asm: Assembly-CSharp}
-      data:
-        _origin: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
-        _methodName: OnTriggerEnterMessage
-    - rid: 3585397972991214378
-      type: {class: 'EventSubscriber`1[[CollisionData, Assembly-CSharp]]', ns: , asm: Assembly-CSharp}
-      data:
-        _origin: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
-        _methodName: OnTriggerEnterMessage
-    - rid: 3585397972991214388
-      type: {class: 'EventSubscriber`1[[CollisionData, Assembly-CSharp]]', ns: , asm: Assembly-CSharp}
-      data:
-        _origin: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
-        _methodName: OnTriggerEnterMessage
-    - rid: 3585397972991214389
-      type: {class: 'EventSubscriber`1[[CollisionData, Assembly-CSharp]]', ns: , asm: Assembly-CSharp}
-      data:
-        _origin: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
-        _methodName: OnTriggerEnterMessage
-    - rid: 3585397972991214396
-      type: {class: 'EventSubscriber`1[[CollisionData, Assembly-CSharp]]', ns: , asm: Assembly-CSharp}
-      data:
-        _origin: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
-        _methodName: OnTriggerEnterMessage
-    - rid: 3585397972991214416
-      type: {class: 'EventSubscriber`1[[CollisionData, Assembly-CSharp]]', ns: , asm: Assembly-CSharp}
-      data:
-        _origin: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
-        _methodName: OnTriggerEnterMessage
+    RefIds: []

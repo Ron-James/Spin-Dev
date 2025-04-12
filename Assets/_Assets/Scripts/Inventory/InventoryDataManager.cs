@@ -15,7 +15,7 @@ public class InventoryDataManager : SerializableScriptableObject, ISceneCycleLis
 
 
     [Title("Variable References")] [SerializeField]
-    private VariableReference<ItemData> lastAddedItemData;
+    private ActionReference<ItemTransfer> lastAddedItemData = new();
     
     public Item[] allItems => inventory.Keys.ToArray();
     public Dictionary<Item, int> Inventory => inventory;
@@ -32,14 +32,14 @@ public class InventoryDataManager : SerializableScriptableObject, ISceneCycleLis
             inventory.Add(item, amount);
         }
         
-        lastAddedItemData.CurrentValue = new ItemData(item, amount);
+        lastAddedItemData.Value = new ItemTransfer(item, amount);
     }
     
     
     [Button]
-    public void AddItem(ItemData itemData)
+    public void AddItem(ItemTransfer itemTransfer)
     {
-        AddItem(itemData.ItemReference.Value, itemData.Quantity);
+        AddItem(itemTransfer.ItemReference.Value, itemTransfer.Quantity);
     }
     
     

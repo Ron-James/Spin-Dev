@@ -5,53 +5,62 @@ using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 
 /// <summary>
-/// Stores saved data for a collection of ScriptableObjects.
+/// Represents a snapshot of saved ScriptableObject data and their runtime rehydrated instances.
 /// </summary>
 [Serializable]
 public class SaveState
 {
     [OdinSerialize]
-    public Dictionary<ScriptableObjectReference<SerializableScriptableObject>, object> savedData = new();
-    
+    public Dictionary<ScriptableObjectReference<SerializableScriptableObject>, Dictionary<string, object>> SavedData = new();
+
+    [NonSerialized, ShowInInspector, ReadOnly]
+    private Dictionary<ScriptableObjectReference<SerializableScriptableObject>, ScriptableObject> runtimeInstances =
+        new();
+
     /// <summary>
-    /// Rehydrates all saved POCO data into new runtime ScriptableObject instances for preview or future use.
+    /// Rehydrates all saved field data into new runtime ScriptableObject instances.
     /// </summary>
     [Button]
     public void RehydrateToRuntimeInstances()
     {
-        var newDict = new Dictionary<ScriptableObjectReference<SerializableScriptableObject>, object>();
+        runtimeInstances = new();
 
-        foreach (var kvp in savedData)
+        foreach (var kvp in SavedData)
         {
             var reference = kvp.Key;
-            var savedPOCO = kvp.Value;
+            var fieldData = kvp.Value;
 
-            if (reference.Value == null || savedPOCO == null) continue;
+            if (reference.Value == null || fieldData == null) continue;
 
-            var type = reference.Value.GetType();
-            var runtimeInstance = ScriptableObject.CreateInstance(type);
-            runtimeInstance.name = reference.Value.name + "_Runtime";
+            var instance = UnityEngine.Object.Instantiate(reference.Value);
+            instance.name = reference.Value.name + "_Runtime";
 
-            try
+            if (instance is ISaveable saveable)
             {
-                if (runtimeInstance is ISaveable saveable)
-                {
-                    saveable.RestoreState(savedPOCO); // POCO gets applied to blank SO
-                }
-
-                newDict[reference] = runtimeInstance;
+                saveable.RestoreState(fieldData);
+                runtimeInstances[reference] = instance;
             }
-            catch (Exception e)
+            else
             {
-                Debug.LogError($"Rehydration failed for {reference.Value.name}: {e.Message}");
+                Debug.LogWarning($"Reference {reference.Value.name} is not ISaveable.");
             }
         }
-
-        savedData = newDict;
     }
 
+    /// <summary>
+    /// Returns the current runtime copy of a ScriptableObject for inspection or use.
+    /// </summary>
+    public ScriptableObject GetRuntimeInstance(ScriptableObjectReference<SerializableScriptableObject> reference)
+    {
+        runtimeInstances.TryGetValue(reference, out var instance);
+        return instance;
+    }
 
+    /// <summary>
+    /// Returns all runtime ScriptableObject instances.
+    /// </summary>
+    public IReadOnlyDictionary<ScriptableObjectReference<SerializableScriptableObject>, ScriptableObject> GetAllRuntimeInstances()
+    {
+        return runtimeInstances;
+    }
 }
-
-
-

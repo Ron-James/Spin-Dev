@@ -17,22 +17,13 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public interface ISaveable
 {
-    object GetSaveData();
-    void RestoreState(object state);
+    Dictionary<string, object> CaptureState(); // Extract state as a dictionary
+    void RestoreState(Dictionary<string, object> state); // Apply state from dictionary
     void OnSave();
     void OnLoad();
 }
 
 
-
-/// <summary>
-/// Generic interface for strongly-typed POCO state access.
-/// </summary>
-public interface ISaveable<T>
-{
-    T GetCopy(); // Returns POCO state
-    void RestoreState(T state); // Accepts POCO to rehydrate live instance
-}
 
 
 /// <summary>
@@ -86,10 +77,10 @@ public class SaveDataManagerSO : SerializableScriptableObject, IInitializable, I
                 var reference = new ScriptableObjectReference<SerializableScriptableObject>(so);
                 
                 // Check if the reference already exists in the saved data
-                var data = saveable.GetSaveData(); // Returns a POCO
+                var data = saveable.CaptureState(); // Returns a POCO
                 
                 // If the reference already exists, update the data
-                state.savedData[reference] = data;
+                state.SavedData[reference] = data;
                 saveable.OnSave();
             }
         }
@@ -124,7 +115,7 @@ public class SaveDataManagerSO : SerializableScriptableObject, IInitializable, I
         currentSlotIndex = slotIndex;
         var state = saveFile.saveStates[slotIndex];
 
-        foreach (var keyValuePair in state.savedData)
+        foreach (var keyValuePair in state.SavedData)
         {
             if (keyValuePair.Key.Value is ISaveable saveable)
             {

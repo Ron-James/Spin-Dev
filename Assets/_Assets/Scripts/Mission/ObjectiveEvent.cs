@@ -2,4 +2,4 @@
 using UnityEngine;
 
 [CreateAssetMenu (fileName = "ObjectiveEvent", menuName = "Custom Events/ObjectiveEvent")]
-public class ObjectiveEvent : EventSO<MissionObjective>{}
+public class ObjectiveAction : ActionSO<MissionObjective>{}

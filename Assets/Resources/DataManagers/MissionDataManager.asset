@@ -15,30 +15,56 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 2eb6bd1205cfc554084aa8f6c5f3f85c, type: 2}
+    - {fileID: 11400000, guid: 19640e52ff65fb14d8007f84a7257242, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: completeMissionAR
+      Entry: 7
+      Data: 0|ActionReference`1[[MissionObjective, Assembly-CSharp]], Assembly-CSharp
+    - Name: useValue
+      Entry: 5
+      Data: false
+    - Name: _value
+      Entry: 6
+      Data: 
+    - Name: assetReference
+      Entry: 10
+      Data: 0
+    - Name: editAsset
+      Entry: 5
+      Data: false
+    - Name: _assetReference
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: missionStartAR
+      Entry: 7
+      Data: 1|ActionReference`1[[MissionObjective, Assembly-CSharp]], Assembly-CSharp
+    - Name: useValue
+      Entry: 5
+      Data: false
+    - Name: _value
+      Entry: 6
+      Data: 
+    - Name: assetReference
+      Entry: 10
+      Data: 1
+    - Name: editAsset
+      Entry: 5
+      Data: false
+    - Name: _assetReference
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
   guid: 3075d309-5d45-4a3d-bd57-e81eb1cd0d04
   _ongoingMissions: []
   _completedMissions: []
-  lastCompletedObjectiveVR:
-    _event: {fileID: 11400000, guid: 19640e52ff65fb14d8007f84a7257242, type: 2}
-    _isConstant: 1
-    _constantValue: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
-  lastStartedObjectiveVR:
-    _event: {fileID: 11400000, guid: 2eb6bd1205cfc554084aa8f6c5f3f85c, type: 2}
-    _isConstant: 1
-    _constantValue: {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}
-  lastStartedMissionVR:
-    _event: {fileID: 11400000, guid: 8d6b0fc325c75c44bbfcf044ef1e62da, type: 2}
-    _isConstant: 1
-    _constantValue: {fileID: 11400000, guid: 68f877ce0221ee9499eab9dc22d699e0, type: 2}
-  lastCompletedMissionVR:
-    _event: {fileID: 11400000, guid: c3b0defad97d41c40ae6c906721ec657, type: 2}
-    _isConstant: 1
-    _constantValue: {fileID: 11400000, guid: 68f877ce0221ee9499eab9dc22d699e0, type: 2}
-  allObjectives:
-  - {fileID: 11400000, guid: 4f075b4eb103e8545bb6aa6303ada595, type: 2}

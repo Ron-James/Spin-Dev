@@ -26,8 +26,7 @@ public class MissionObjective : SaveableSO<MissionObjective>, ISceneCycleListene
     [SerializeField, ReadOnly, Save, Tooltip("The current state of the objectives progress")] protected Progress progress = Progress.Locked;
 
     
-    [SerializeReference, Save] private List<BaseActionRequirement> messageRequirements = new();
-    [SerializeField, GUIColor("Red")] private bool testValue;
+    [SerializeReference, Save] private List<BaseActionObjective> messageRequirements = new();
 
     [SerializeField] private UnityEvent OnComplete;
     public Progress CurrentProgress => progress;

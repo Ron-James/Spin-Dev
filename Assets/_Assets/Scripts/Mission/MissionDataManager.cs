@@ -18,9 +18,9 @@ public class MissionDataManager : SaveableSO<MissionDataManager>, IInitializable
 
 
     [Title("Last Completed/Started Variable References")] [SerializeField]
-    private VariableReference<MissionObjective> lastCompletedObjectiveVR;
+    private ActionReference<MissionObjective> completeMissionAR = new();
 
-    [SerializeField] private VariableReference<MissionObjective> lastStartedObjectiveVR;
+    [SerializeField] private ActionReference<MissionObjective> missionStartAR = new();
     public List<ScriptableObjectReference<MissionObjective>> OngoingMissions => _ongoingMissions;
 
 
@@ -36,7 +36,7 @@ public class MissionDataManager : SaveableSO<MissionDataManager>, IInitializable
         {
             _ongoingMissions.Remove(mission);
             _completedMissions.Add(mission);
-            lastCompletedObjectiveVR.CurrentValue = missionObjective;
+            completeMissionAR.Value = missionObjective;
             
         }
         catch (Exception e)
@@ -59,7 +59,7 @@ public class MissionDataManager : SaveableSO<MissionDataManager>, IInitializable
         {
             OngoingMissions.Add(missionObjectReference);
             mission.Init(this);
-            lastStartedObjectiveVR.CurrentValue = mission;
+            missionStartAR.Value = mission;
         }
     }
     
