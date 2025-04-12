@@ -12,7 +12,8 @@ using UnityEngine;
 public static class SaveUtility
 {
     /// <summary>
-    /// Extracts top-level fields marked with [Save] and recursively captures their data.
+    /// Extracts top-level fields marked with [Save] and recursively captures their values into a dictionary.
+    /// Supports lists, dictionaries, nested objects, and polymorphic types.
     /// </summary>
     public static Dictionary<string, object> ExtractSaveData(object source)
     {
@@ -32,7 +33,8 @@ public static class SaveUtility
     }
 
     /// <summary>
-    /// Applies a saved dictionary to a runtime instance, applying only [Save] fields.
+    /// Applies previously saved dictionary data onto a runtime object,
+    /// only updating fields marked with [Save] and preserving other field values.
     /// </summary>
     public static void ApplySaveData(object target, Dictionary<string, object> saved)
     {
@@ -54,40 +56,38 @@ public static class SaveUtility
             else
             {
                 var current = field.GetValue(target);
-                if (current == null && value != null)
+                if (current != null)
                 {
-                    current = Activator.CreateInstance(field.FieldType);
-                    field.SetValue(target, current);
+                    ApplyNestedValue(current, value);
                 }
-
-                ApplyNestedValue(current, value);
+                else
+                {
+                    var fallback = Activator.CreateInstance(field.FieldType);
+                    ApplyNestedValue(fallback, value);
+                    field.SetValue(target, fallback);
+                }
             }
         }
     }
 
-    
     /// <summary>
-    /// extracts the value of a field, handling lists, dictionaries, and complex objects.
+    /// Recursively extracts nested object data including $type info for polymorphic types.
+    /// Skips fields marked with [DontSave] or delegates.
     /// </summary>
-    /// <param name="value">the object to extract from</param>
-    /// <returns></returns>
     private static object ExtractNestedValue(object value)
     {
         if (value == null) return null;
         var type = value.GetType();
         if (IsSimple(type)) return value;
 
-        // List extraction
         if (value is IList list)
         {
-            //recursively extract the values from the list
             var newList = new List<object>();
             foreach (var item in list)
                 newList.Add(ExtractNestedValue(item));
             return newList;
         }
 
-        // Dictionary extraction
         if (value is IDictionary dict)
         {
             var newDict = new Dictionary<object, object>();
@@ -96,22 +96,17 @@ public static class SaveUtility
             return newDict;
         }
 
-        // Complex object
-        //Get object type from $type field if available
         var result = new Dictionary<string, object>
         {
-            ["$type"] = type.AssemblyQualifiedName // Add type info for rehydration
+            ["$type"] = type.AssemblyQualifiedName
         };
 
         var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         foreach (var field in fields)
         {
-            // Skip non-save fields
             if (field.IsDefined(typeof(DontSaveAttribute), true)) continue;
-            // Skip events/delegates
             if (typeof(Delegate).IsAssignableFrom(field.FieldType)) continue;
 
-            // get the field value
             var nestedValue = field.GetValue(value);
             result[field.Name] = ExtractNestedValue(nestedValue);
         }
@@ -119,70 +114,36 @@ public static class SaveUtility
         return result;
     }
 
-    // ================================
-    // Recursive application
-    // ================================
-
+    /// <summary>
+    /// Applies nested dictionary data to a complex object.
+    /// Includes polymorphic $type support and recursive restoration.
+    /// </summary>
     private static void ApplyNestedValue(object target, object saved)
     {
         if (target == null || saved == null) return;
 
-        // Handle lists
         if (target is IList targetList && saved is IList savedList)
         {
-            targetList.Clear();
-
-            var elementType = target.GetType().IsArray
-                ? target.GetType().GetElementType()
-                : target.GetType().GetGenericArguments().FirstOrDefault() ?? typeof(object);
-
-            foreach (var savedItem in savedList)
-            {
-                if (IsSimple(elementType))
-                {
-                    targetList.Add(savedItem);
-                }
-                else if (savedItem is Dictionary<string, object> savedItemDict)
-                {
-                    // Try to read $type override for polymorphic support
-                    Type actualType = elementType;
-                    if (savedItemDict.TryGetValue("$type", out var typeStrObj) && typeStrObj is string typeStr)
-                    {
-                        var resolvedType = Type.GetType(typeStr);
-                        if (resolvedType != null && !resolvedType.IsAbstract)
-                            actualType = resolvedType;
-                    }
-
-                    var instance = Activator.CreateInstance(actualType);
-                    ApplyNestedValue(instance, savedItemDict);
-                    targetList.Add(instance);
-                }
-            }
-
+            MergeList(targetList, savedList);
             return;
         }
 
-        // Handle dictionaries (shallow)
         if (target is IDictionary targetDict && saved is IDictionary savedDict)
         {
             targetDict.Clear();
             foreach (DictionaryEntry entry in savedDict)
-            {
                 targetDict[entry.Key] = entry.Value;
-            }
             return;
         }
 
-        // Custom nested object
         if (saved is Dictionary<string, object> savedFields)
         {
-            // If polymorphic, replace instance
-            if (savedFields.TryGetValue("$type", out var typeInfoObj) && typeInfoObj is string typeInfo)
+            if (savedFields.TryGetValue("$type", out var typeObj) && typeObj is string typeName)
             {
-                var dynamicType = Type.GetType(typeInfo);
-                if (dynamicType != null && dynamicType != target.GetType() && !dynamicType.IsAbstract)
+                var actualType = Type.GetType(typeName);
+                if (actualType != null && actualType != target.GetType() && !actualType.IsAbstract)
                 {
-                    var replacement = Activator.CreateInstance(dynamicType);
+                    var replacement = Activator.CreateInstance(actualType);
                     ApplyNestedValue(replacement, savedFields);
                     CopyFields(replacement, target);
                     return;
@@ -194,7 +155,6 @@ public static class SaveUtility
             {
                 if (field.IsDefined(typeof(DontSaveAttribute), true)) continue;
                 if (typeof(Delegate).IsAssignableFrom(field.FieldType)) continue;
-
                 if (!savedFields.TryGetValue(field.Name, out var savedValue)) continue;
 
                 if (IsSimple(field.FieldType))
@@ -203,34 +163,102 @@ public static class SaveUtility
                 }
                 else
                 {
-                    var fieldTargetValue = field.GetValue(target);
-                    if (fieldTargetValue == null)
+                    var nested = field.GetValue(target);
+                    if (nested != null)
                     {
-                        fieldTargetValue = Activator.CreateInstance(field.FieldType);
-                        field.SetValue(target, fieldTargetValue);
+                        ApplyNestedValue(nested, savedValue);
                     }
-
-                    ApplyNestedValue(fieldTargetValue, savedValue);
+                    else
+                    {
+                        var created = Activator.CreateInstance(field.FieldType);
+                        ApplyNestedValue(created, savedValue);
+                        field.SetValue(target, created);
+                    }
                 }
             }
         }
     }
 
     /// <summary>
-    /// Copies all field values from source to target (same type).
+    /// Reuses or rebuilds list contents with new values, respecting $type metadata for polymorphic deserialization.
+    /// </summary>
+    private static void MergeList(IList targetList, IList savedList)
+    {
+        int count = Mathf.Min(targetList.Count, savedList.Count);
+
+        var resultList = (IList)Activator.CreateInstance(targetList.GetType());
+    
+        for (int i = 0; i < savedList.Count; i++)
+        {
+            var savedItem = savedList[i];
+
+            if (savedItem == null)
+            {
+                resultList.Add(null);
+                continue;
+            }
+
+            if (IsSimple(savedItem.GetType()))
+            {
+                resultList.Add(savedItem);
+                continue;
+            }
+
+            if (savedItem is Dictionary<string, object> savedItemDict &&
+                savedItemDict.TryGetValue("$type", out var typeObj) &&
+                typeObj is string typeName)
+            {
+                var actualType = Type.GetType(typeName);
+                if (actualType == null || actualType.IsAbstract)
+                {
+                    Debug.LogWarning($"[SaveUtility] Unable to resolve polymorphic type: {typeName}");
+                    continue;
+                }
+
+                object instance = null;
+
+                // Try reuse existing instance at same index if type matches
+                if (i < targetList.Count && targetList[i]?.GetType() == actualType)
+                {
+                    instance = targetList[i];
+                    ApplyNestedValue(instance, savedItemDict);
+                }
+                else
+                {
+                    instance = Activator.CreateInstance(actualType);
+                    ApplyNestedValue(instance, savedItemDict);
+                }
+
+                resultList.Add(instance);
+            }
+            else
+            {
+                Debug.LogWarning($"[SaveUtility] Unexpected list item format: {savedItem?.GetType()}");
+            }
+        }
+
+        // Replace contents without reallocating the list reference
+        targetList.Clear();
+        foreach (var item in resultList)
+            targetList.Add(item);
+    }
+
+
+
+    /// <summary>
+    /// Copies all public/private fields from one object to another of the same type.
     /// </summary>
     private static void CopyFields(object source, object target)
     {
         var fields = source.GetType().GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         foreach (var field in fields)
         {
-            var value = field.GetValue(source);
-            field.SetValue(target, value);
+            field.SetValue(target, field.GetValue(source));
         }
     }
 
     /// <summary>
-    /// Returns true if the type can be stored directly without recursion or inspection.
+    /// Determines whether a type is a primitive, enum, string, or UnityEngine.Object.
     /// </summary>
     private static bool IsSimple(Type type)
     {

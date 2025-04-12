@@ -222,14 +222,6 @@ MonoBehaviour:
     _initializables: []
     _prefab: {fileID: 11400000, guid: 3c2d9e9da2d0d4c499536720b46e69e6, type: 2}
     _instance: {fileID: 0}
-  - _sceneInitializer: {fileID: 0}
-    _initializables: []
-    _prefab: {fileID: 11400000, guid: bf462cbaf5390354589f84ddb9e2923d, type: 2}
-    _instance: {fileID: 0}
-  - _sceneInitializer: {fileID: 0}
-    _initializables: []
-    _prefab: {fileID: 11400000, guid: bf462cbaf5390354589f84ddb9e2923d, type: 2}
-    _instance: {fileID: 0}
 --- !u!4 &877557625
 Transform:
   m_ObjectHideFlags: 0

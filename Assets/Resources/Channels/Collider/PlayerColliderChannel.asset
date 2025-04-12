@@ -23,7 +23,7 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes:
-    - Name: OnTriggerEnterVR
+    - Name: OnTriggerEnterAction
       Entry: 7
       Data: 0|ActionReference`1[[CollisionData, Assembly-CSharp]], Assembly-CSharp
     - Name: useValue
@@ -44,7 +44,7 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: OnTriggerExitVR
+    - Name: OnTriggerExitAction
       Entry: 7
       Data: 1|ActionReference`1[[CollisionData, Assembly-CSharp]], Assembly-CSharp
     - Name: useValue
@@ -65,4 +65,4 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  guid: e703d291-dbbc-4973-9172-9e996ebc3f78
+  guid: e47a353c-c005-4a48-ba2e-a63625dec5d6

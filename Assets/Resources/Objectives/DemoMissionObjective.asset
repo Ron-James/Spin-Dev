@@ -26,29 +26,29 @@ MonoBehaviour:
   dataManager: {fileID: 0}
   progress: 0
   messageRequirements:
-  - rid: 6502415295283724408
-  - rid: 6502415295283724409
+  - rid: 6502415295283724466
+  - rid: 6502415295283724467
   OnComplete:
     m_PersistentCalls:
       m_Calls: []
   references:
     version: 2
     RefIds:
-    - rid: 6502415295283724408
+    - rid: 6502415295283724466
       type: {class: AreaObjective, ns: , asm: Assembly-CSharp}
       data:
         _isComplete: 0
         targetCollider:
           _dropInReference: {fileID: 0}
-          _name: Cube
-          guid: 679e6801-fd5c-4710-9476-169f013aaca0
+          _name: 
+          guid: 
         collisionAction: {fileID: 11400000, guid: 3df36ae5a8a4e2146975b4907074e704, type: 2}
-    - rid: 6502415295283724409
+    - rid: 6502415295283724467
       type: {class: AreaObjective, ns: , asm: Assembly-CSharp}
       data:
         _isComplete: 0
         targetCollider:
           _dropInReference: {fileID: 0}
-          _name: Cube_1
-          guid: 79344161-daf3-429d-bce7-99e7355e6987
+          _name: 
+          guid: 
         collisionAction: {fileID: 11400000, guid: 3df36ae5a8a4e2146975b4907074e704, type: 2}

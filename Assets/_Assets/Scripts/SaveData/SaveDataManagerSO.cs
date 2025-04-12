@@ -120,12 +120,17 @@ public class SaveDataManagerSO : SerializableScriptableObject, IInitializable, I
             if (keyValuePair.Key.Value is ISaveable saveable)
             {
                 saveable.RestoreState(keyValuePair.Value);
-                saveable.OnLoad();
+                
             }
             else
             {
                 Debug.LogWarning($"Missing or invalid reference for {keyValuePair.Key}");
             }
+        }
+        
+        foreach (var saveable in saveableObjects)
+        {
+            saveable.OnLoad();
         }
     }
 
