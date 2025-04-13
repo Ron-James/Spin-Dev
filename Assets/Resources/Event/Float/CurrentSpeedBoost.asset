@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6eddf237bdef4643a0666f25ba76f55f, type: 3}
-  m_Name: OnTriggerExit
+  m_Script: {fileID: 11500000, guid: c7446796f3d96974d844d6358388d6e3, type: 3}
+  m_Name: CurrentSpeedBoost
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
@@ -24,19 +24,11 @@ MonoBehaviour:
     - Name: HasRaised
       Entry: 5
       Data: false
-  guid: bc2ef6d0-52e2-4889-af27-041a2a8fdf8e
+  guid: fc11f3f2-a664-43be-9887-182d39acb4c1
   _subscribers: []
-  _defaultCallValue:
-    otherCollider:
-      _dropInReference: {fileID: 0}
-      _name: 
-      guid: 
+  _defaultCallValue: 0
   _messageSubscribers: []
-  _storedValue:
-    otherCollider:
-      _dropInReference: {fileID: 0}
-      _name: 
-      guid: 
+  _storedValue: 0
   references:
     version: 2
     RefIds: []

@@ -86,16 +86,27 @@ public static class ScriptableObjectManager
     // Retrieve asset by GUID for a specified type.
     public static T GetAssetByGuid<T>(string guid) where T : ScriptableObject, IGuidAsset
     {
+        
         foreach (var kvp in registry)
         {
-            // Check if the stored type is T or a subclass of T.
-            if (typeof(T).IsAssignableFrom(kvp.Key))
+            try
             {
-                if (kvp.Value.TryGetValue(guid, out ScriptableObject asset))
+                if (typeof(T).IsAssignableFrom(kvp.Key))
                 {
-                    return asset as T;
+                
+                    if (kvp.Value.TryGetValue(guid, out ScriptableObject asset))
+                    {
+                        return asset as T;
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                Debug.LogError("Problem with registry: " + guid + e.Message);
+                throw;
+            }
+            // Check if the stored type is T or a subclass of T.
+            
         }
         Debug.LogWarning($"Asset of type {typeof(T)} with GUID {guid} not found.");
         return null;

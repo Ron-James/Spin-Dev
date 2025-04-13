@@ -6,7 +6,7 @@ using UnityEngine;
 [Serializable]
 public class ItemTransfer : IEquatable<ItemTransfer>
 {
-    [SerializeField] private Item item;
+    [SerializeField, DontSave] private Item item;
     [SerializeField, ReadOnly] private ScriptableObjectReference<Item> itemReference;
     [SerializeField] private int quantity;
 
@@ -18,9 +18,10 @@ public class ItemTransfer : IEquatable<ItemTransfer>
     {
         if (itemReference != null)
         {
-            item = itemReference.Value;
+            itemReference = new ScriptableObjectReference<Item>(item);
         }
     }
+    
         
     public ItemTransfer()
     {

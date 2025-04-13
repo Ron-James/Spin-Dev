@@ -91,7 +91,11 @@ public abstract class BaseActionSO : SerializableScriptableObject, ISceneCycleLi
     {
         for(int loop = _subscribers.Count - 1; loop >= 0; loop--)
         {
-            if(_subscribers[loop].Origin == null || _subscribers[loop] == null)
+            if(_subscribers[loop] == null)
+            {
+                _subscribers.RemoveAt(loop);
+            }
+            else if(_subscribers[loop].Origin == null || _subscribers[loop] == null)
             {
                 _subscribers.RemoveAt(loop);
             }

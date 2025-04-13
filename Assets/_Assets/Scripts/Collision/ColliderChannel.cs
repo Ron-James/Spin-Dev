@@ -1,12 +1,13 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 
 [CreateAssetMenu(fileName = "ColliderChannel", menuName = "Channels/ColliderChannel")]
 public class ColliderChannel : SerializableScriptableObject
 {
-    [SerializeField] private ActionReference<CollisionData> OnTriggerEnterAction = new();
-    [SerializeField] private ActionReference<CollisionData> OnTriggerExitAction = new();
+    [SerializeField, HideReferenceObjectPicker] private ActionReference<CollisionData> OnTriggerEnterAction = new();
+    [SerializeField, HideReferenceObjectPicker] private ActionReference<CollisionData> OnTriggerExitAction = new();
 
     public ActionSO<CollisionData> OnTriggerExit => OnTriggerExitAction.ActionCasted;
     public ActionSO<CollisionData> OnTriggerEnter => OnTriggerEnterAction.ActionCasted;

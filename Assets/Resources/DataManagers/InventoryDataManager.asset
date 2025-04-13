@@ -15,8 +15,7 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 11400000, guid: f7ba4e0fb7bf52b419013dfdc7ba70f8, type: 2}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -42,37 +41,16 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-    - Name: lastAddedItemData
-      Entry: 7
-      Data: 2|ActionReference`1[[ItemData, Assembly-CSharp]], Assembly-CSharp
-    - Name: useValue
-      Entry: 5
-      Data: false
-    - Name: _value
-      Entry: 7
-      Data: 3|ItemData, Assembly-CSharp
-    - Name: item
-      Entry: 6
-      Data: 
-    - Name: itemReference
-      Entry: 6
-      Data: 
-    - Name: quantity
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: assetReference
-      Entry: 10
-      Data: 0
-    - Name: editAsset
-      Entry: 5
-      Data: false
-    - Name: _assetReference
-      Entry: 10
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-  guid: da094c16-f66c-405d-a88f-dbdc49dbe1d1
+  guid: a244b85c-a51b-431b-ac2d-ebaa46133420
+  _savedStock: []
+  lastAddedItemData:
+    useValue: 1
+    _value:
+      item: {fileID: 0}
+      itemReference:
+        _dropInReference: {fileID: 0}
+        guid: 
+      quantity: 0
+    assetReference: {fileID: 0}
+    editAsset: 0
+    _assetReference: {fileID: 0}

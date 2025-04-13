@@ -3,7 +3,10 @@ using Sirenix.OdinInspector;
 using System;
 using Sirenix.Serialization;
 
-
+/// <summary>
+/// interface for value assets.
+/// </summary>
+/// <typeparam name="T">the type of the value you want to store</typeparam>
 public interface IValueAsset<T>
 {
     T StoredValue { get; set; }
@@ -14,6 +17,8 @@ public interface IValueAsset<T>
 /// Wrapper Class for action SOs to store their references. Implements ValueReference on Value asset ActionSO<T>
 /// </summary>
 /// <typeparam name="TValue">The type you want to store in the value</typeparam>
+[HideReferenceObjectPicker]
+[Serializable]
 public class ActionReference<TValue> : ValueReference<TValue, ActionSO<TValue>>
 {
     /// <summary>
@@ -22,6 +27,13 @@ public class ActionReference<TValue> : ValueReference<TValue, ActionSO<TValue>>
     public ActionReference()
     {
         _value = default;
+        assetReference = null;
+    }
+    
+    public ActionReference(TValue value)
+    {
+        useValue = false;
+        _value = value;
         assetReference = null;
     }
     public BaseActionSO Action => assetReference;
@@ -44,11 +56,19 @@ public class ActionReference<TValue> : ValueReference<TValue, ActionSO<TValue>>
 [InlineProperty]
 [LabelWidth(200)]
 [Serializable]
+[HideReferenceObjectPicker]
 public class ValueReference<TValue, TAsset> where TAsset : ScriptableObject, IValueAsset<TValue>
 {
     public ValueReference()
     {
         _value = default;
+        assetReference = null;
+    }
+    
+    public ValueReference(TValue value)
+    {
+        useValue = true;
+        _value = value;
         assetReference = null;
     }
     

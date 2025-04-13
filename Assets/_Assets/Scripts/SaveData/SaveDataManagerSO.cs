@@ -35,7 +35,7 @@ public class SaveDataManagerSO : SerializableScriptableObject, IInitializable, I
     [OdinSerialize] private SaveFile saveFile = new(); // Holds all saveStates
     [OdinSerialize] private int currentSlotIndex = 0;  // Active slot index
 
-    [SerializeField] private List<ISaveable> saveableObjects = new(); // Objects to track
+    [SerializeField] private HashSet<ISaveable> saveableObjects = new HashSet<ISaveable>(); // Objects to track
     [SerializeField] private DataFormat dataFormat = DataFormat.JSON; // Serialization format
     [SerializeField] private string fileName = "saveFile.json";       // Filename to write to
 
@@ -69,6 +69,10 @@ public class SaveDataManagerSO : SerializableScriptableObject, IInitializable, I
     {
         var state = new SaveState();
 
+        foreach (var item in saveableObjects)
+        {
+            item.OnSave();
+        }
         foreach (var saveable in saveableObjects)
         {
             if (saveable is SerializableScriptableObject so)
@@ -81,7 +85,6 @@ public class SaveDataManagerSO : SerializableScriptableObject, IInitializable, I
                 
                 // If the reference already exists, update the data
                 state.SavedData[reference] = data;
-                saveable.OnSave();
             }
         }
         
@@ -117,9 +120,17 @@ public class SaveDataManagerSO : SerializableScriptableObject, IInitializable, I
 
         foreach (var keyValuePair in state.SavedData)
         {
+            //Get reference to the ScriptableObject from the SOReference key in the dictionary
             if (keyValuePair.Key.Value is ISaveable saveable)
             {
-                saveable.RestoreState(keyValuePair.Value);
+                try
+                {
+                    saveable.RestoreState(keyValuePair.Value); 
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"Failed to restore state for {keyValuePair.Key.Value.name}: {e.Message}");
+                }
                 
             }
             else
@@ -152,7 +163,7 @@ public class SaveDataManagerSO : SerializableScriptableObject, IInitializable, I
             var bytes = await File.ReadAllBytesAsync(FilePath);
             saveFile = SerializationUtility.DeserializeValue<SaveFile>(bytes, dataFormat);
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             Debug.LogError($"Failed to load save file: {e.Message}");
             return;
@@ -174,6 +185,7 @@ public class SaveDataManagerSO : SerializableScriptableObject, IInitializable, I
     {
         //Loads thje data from the file
         await LoadSaveFile();
+        await LoadAsync(CurrentSlotIndex);
     }
 
     public void OnEditorStopped()

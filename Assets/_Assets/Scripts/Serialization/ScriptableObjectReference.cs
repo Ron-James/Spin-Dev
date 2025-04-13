@@ -6,11 +6,10 @@ using UnityEngine;
 [Serializable]
 public class ScriptableObjectReference<T> : IEquatable<ScriptableObjectReference<T>>, IEquatable<T> where T : ScriptableObject, IGuidAsset
 {
-    [SerializeField, OnValueChanged("UpdateGUID")] SerializableScriptableObject _dropInReference;
-    [SerializeField, ReadOnly, Save]
-    private string guid;
+    [SerializeField, DontSave] SerializableScriptableObject _dropInReference;
+    [SerializeField, Save, HideInInspector] private string guid;
 
-    [OdinSerialize]
+    [SerializeField, HideInInspector]
     private string typeName;
 
     [ShowInInspector, OdinSerialize]
