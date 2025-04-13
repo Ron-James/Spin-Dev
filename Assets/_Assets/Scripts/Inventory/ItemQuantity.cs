@@ -4,7 +4,7 @@ using UnityEngine;
 
 
 [Serializable]
-public class ItemTransfer : IEquatable<ItemTransfer>
+public class ItemQuantity : IEquatable<ItemQuantity>
 {
     [SerializeField, DontSave] private Item item;
     [SerializeField, ReadOnly] private ScriptableObjectReference<Item> itemReference;
@@ -13,7 +13,7 @@ public class ItemTransfer : IEquatable<ItemTransfer>
     public int Quantity => quantity;
 
     public ScriptableObjectReference<Item> ItemReference => itemReference;
-    
+
     private void UpdateDropIn()
     {
         if (itemReference != null)
@@ -21,23 +21,23 @@ public class ItemTransfer : IEquatable<ItemTransfer>
             itemReference = new ScriptableObjectReference<Item>(item);
         }
     }
-    
-        
-    public ItemTransfer()
+
+
+    public ItemQuantity()
     {
         item = null;
         itemReference = null;
         quantity = 0;
     }
-        
-    public ItemTransfer(Item item, int quantity)
+
+    public ItemQuantity(Item item, int quantity)
     {
         this.item = item;
         itemReference = new ScriptableObjectReference<Item>(item);
         this.quantity = quantity;
     }
 
-    public bool Equals(ItemTransfer other)
+    public bool Equals(ItemQuantity other)
     {
         if (other is null) return false;
         if (ReferenceEquals(this, other)) return true;
@@ -49,7 +49,7 @@ public class ItemTransfer : IEquatable<ItemTransfer>
         if (obj is null) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != GetType()) return false;
-        return Equals((ItemTransfer)obj);
+        return Equals((ItemQuantity)obj);
     }
 
     public override int GetHashCode()

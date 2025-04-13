@@ -14,15 +14,21 @@ public class InventoryDataManager : SaveableSO<InventoryDataManager>, ISceneCycl
 {
     [SerializeField] Dictionary<Item, int> inventory = new();
 
-    [SerializeField, Save, ReadOnly] private List<ItemTransfer> _savedStock = new();
+    [SerializeField, Save, ReadOnly] private List<ItemQuantity> _savedStock = new();
 
     [Title("Variable References")] [SerializeField]
-    private ActionReference<ItemTransfer> lastAddedItemData = new();
+    private ActionReference<ItemQuantity> lastAddedItemData = new();
     private ActionReference<Consumable> lastConsumableUsed = new();
     
     public Item[] allItems => inventory.Keys.ToArray();
     public Dictionary<Item, int> Inventory => inventory;
 
+    /// <summary>
+    /// Add an item to the inventory.
+    /// Notify to listeners that an item was added.
+    /// </summary>
+    /// <param name="item">The item to add</param>
+    /// <param name="amount">the quantity you want to add</param>
     [Button]
     public void AddItem(Item item, int amount)
     {
@@ -37,18 +43,22 @@ public class InventoryDataManager : SaveableSO<InventoryDataManager>, ISceneCycl
         }
 
         _savedStock = GetSavedStock();
-        lastAddedItemData.Value = new ItemTransfer(item, amount);
+        lastAddedItemData.Value = new ItemQuantity(item, amount);
         
     }
     
     
     [Button]
-    public void AddItem(ItemTransfer itemTransfer)
+    public void AddItem(ItemQuantity itemQuantity)
     {
-        AddItem(itemTransfer.ItemReference.Value, itemTransfer.Quantity);
+        AddItem(itemQuantity.ItemReference.Value, itemQuantity.Quantity);
     }
     
-    
+    /// <summary>
+    /// Get quanitity of a specific item in the inventory.
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
     public int GetQuantity(Item item)
     {
         if(inventory.ContainsKey(item))
@@ -58,36 +68,41 @@ public class InventoryDataManager : SaveableSO<InventoryDataManager>, ISceneCycl
         return 0;
         
     }
-    
+    /// <summary>
+    /// Check if the inventory has a specific item and if it has enough quantity.
+    /// </summary>
+    /// <param name="item">The item you want to check</param>
+    /// <param name="amount">The quantity you want to validate</param>
+    /// <returns></returns>
     public bool ValidateQuantity(Item item, int amount = 0)
     {
         return inventory.ContainsKey(item) && inventory[item] >= amount;
     }
     
-    private void SetItemInInventory(Item item, int amount)
-    {
-        if(inventory == null)
-        {
-            inventory = new();
-        }
-        inventory.TryAdd(item, amount);
-    }
 
-    
-    private List<ItemTransfer> GetSavedStock()
+    /// <summary>
+    /// Getsx the inventory stock in an easily serializable format for saving.
+    /// </summary>
+    /// <returns></returns>
+    private List<ItemQuantity> GetSavedStock()
     {
-        List<ItemTransfer> list = new();
+        List<ItemQuantity> list = new();
         foreach (var kvp in inventory)
         {
             Item item = kvp.Key;
             int quantity = kvp.Value;
-            ItemTransfer itemTransfer = new ItemTransfer(item, quantity);
-            list.Add(itemTransfer);
+            ItemQuantity itemQuantity = new ItemQuantity(item, quantity);
+            list.Add(itemQuantity);
             
         }
         
         return list;
     }
+    
+    
+    /// <summary>
+    /// Sync the saved stock data with the current inventory.
+    /// </summary>
     [Button]
     private void SyncStockData()
     {

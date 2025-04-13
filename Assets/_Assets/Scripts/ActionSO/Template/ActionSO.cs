@@ -106,7 +106,10 @@ public abstract class BaseActionSO : SerializableScriptableObject, ISceneCycleLi
 }
 
 
-
+/// <summary>
+/// Class for action SOs that have a return type.
+/// </summary>
+/// <typeparam name="T">The return type</typeparam>
 public abstract class ActionSO<T> : BaseActionSO, IValueAsset<T>
 {
     [SerializeField, Tooltip("The default value this action stores before being raised for the first time.")] private T _defaultCallValue;

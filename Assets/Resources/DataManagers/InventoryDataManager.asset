@@ -15,7 +15,8 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 563e9cc969439574782a20151aa4d275, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -34,7 +35,19 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 10
       Data: 0
+    - Name: $v
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: 
       Entry: 13
       Data: 
@@ -44,13 +57,14 @@ MonoBehaviour:
   guid: a244b85c-a51b-431b-ac2d-ebaa46133420
   _savedStock: []
   lastAddedItemData:
-    useValue: 1
+    useValue: 0
     _value:
-      item: {fileID: 0}
+      item: {fileID: 11400000, guid: 563e9cc969439574782a20151aa4d275, type: 2}
       itemReference:
         _dropInReference: {fileID: 0}
-        guid: 
-      quantity: 0
-    assetReference: {fileID: 0}
+        guid: c985b4d3-9e61-4e89-9b18-b8a809dfc62b
+        typeName: Nitro, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+      quantity: 1
+    assetReference: {fileID: 11400000, guid: f7ba4e0fb7bf52b419013dfdc7ba70f8, type: 2}
     editAsset: 0
-    _assetReference: {fileID: 0}
+    _assetReference: {fileID: 11400000, guid: f7ba4e0fb7bf52b419013dfdc7ba70f8, type: 2}
